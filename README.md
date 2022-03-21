@@ -16,7 +16,7 @@ Load the library from the web if you wish:
 
 The reference and examples are commented in the [source code](https://www.ranoya.com/Assets/JSLibs/DataT/basics.js).
 
-### Fetch function, adapted for Observable
+### Fetch function
 
 Get a json from a URL
 
