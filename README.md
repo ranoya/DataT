@@ -21,21 +21,13 @@ The reference and examples are commented in the [source code](https://www.ranoya
 Get a json from a URL
 
 ```js
-xpto = getdata(myurl);
+xpto = getdata(myurl, callback);
+callback = function (data) {
+  // data is the JSON data fetched
+};
 ```
-
-<br>
-**Original pure javascript DataT Fetch function:**
-```js
-getdata(myurl, function(data) {
-   // console.table(data);
-});
-```
-<br>
 
 ### Date functions
-
-<br>
 
 ##### dayadd - add days to a string date
 
@@ -50,8 +42,8 @@ mystringdate = "11/04/2022";
 newdate = dayadd(mystringdate, 7);
 ```
 
-<br>
 ##### howmanydays - how many days passed between two dates, including the last one
+
 ```js
 day = howmanydaysincluding(firstdate, seconddate);
 ```
@@ -70,8 +62,8 @@ Create a list array from an old one when their elements have any value on a spec
 xpto = bfilter(array, criteria);
 ```
 
-<br>
 Example:
+
 ```js
 separate = bfilter(oldarray, "active");
 ```
@@ -84,8 +76,6 @@ List of unique values from a criteria (key) in the array
 newarray = unique(oldarray, criteria);
 ```
 
-<br>
-
 ### Sort by a list of values
 
 Sort an array using a list of possible values for a specific key
@@ -93,8 +83,6 @@ Sort an array using a list of possible values for a specific key
 ```js
 newarray = sortbylist(oldarray, keyvaluesarray, key);
 ```
-
-<br>
 
 Example:
 
@@ -117,8 +105,6 @@ orders = sortbylist(disordered, list, "fruit"); // Array(3):
 // ]
 ```
 
-<br>
-
 ### Extract all Tags
 
 Extract all Tags (words marking some criteria) in an array of objects, in a specific key
@@ -128,12 +114,11 @@ of the object
 newarray = tags(array, key, separator);
 ```
 
-<br>
 Example:
+
 ```js
-alltags = tags(myarray, "categories", ","); 
+alltags = tags(myarray, "categories", ",");
 ```
-<br>
 
 ### Select function:
 
@@ -151,7 +136,6 @@ newarray = select(
 );
 ```
 
-<br>
 Using Select Predefined Tools:
 
 ```
@@ -159,12 +143,9 @@ newarray = select(oldarray,patterncheck,/mypattern/gi);
 
 ```
 
-<br>
-
 #### Select Predefined Tools
 
 Functions to pair with Select Function
-<br>
 
 ##### patterncheck
 
@@ -190,5 +171,4 @@ omnifilter = function (arr) {
 omnifilterfetchdata("https://www.myurl/file.json", "inputelementID");
 ```
 
-<br>
-*arr* is the array created/updated from the JSON file being filtered by `<input>`
+_arr_ is the array created/updated from the JSON file being filtered by `<input>`
