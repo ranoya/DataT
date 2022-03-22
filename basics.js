@@ -218,6 +218,87 @@ patterncheck = function (n, arr, patt) {
     }
 }
 
+/**
+ * Additive multipattern check
+ * Include any finding of any patterns separated by space
+ * 
+ * Ex:
+ * 
+ * newarray = select(oldarray, multipatterncheck_add, "slide presentation document");
+ * 
+ */
+
+multipatterncheck_add = function (n, arr, patt) {
+
+    if (patt != "" || typeof patt != "undefined") {
+        let mark = false;
+        let multipatt = patt.split(" ");
+        let regextrans = "";
+
+        for (let m = 0; m < multipatt.length; m++) {
+            for (let k = 0; k < Object.keys(arr).length; k++) {
+                regextrans = new RegExp(multipatt[m], "i");
+                if (regextrans.test(arr[Object.keys(arr)[k]])) {
+                    mark = true;
+                }
+            }
+        }
+
+        if (mark) {
+            n.push(arr);
+        }
+    } else {
+        n.push(arr);
+    }
+}
+
+/**
+ * Exclusion multipattern check
+ * Include findings when all patterns separated by space are present
+ * 
+ * Ex:
+ * 
+ * newarray = select(oldarray, multipatterncheck_exclude, "slide class");
+ * 
+ */
+
+
+multipatterncheck_exclude = function (n, arr, patt) {
+
+    if (patt != "" || typeof patt != "undefined") {
+
+        let multipatt = patt.split(" ");
+        let regextrans = "";
+        let allcheck = [];
+        let mark = true;
+
+        for (let i = 0; i < multipatt.length; i++) {
+            allcheck[multipatt[i]] = false;
+        }
+
+        for (let k = 0; k < Object.keys(arr).length; k++) {
+            for (let m = 0; m < multipatt.length; m++) {
+                regextrans = new RegExp(multipatt[m], "i");
+                if (regextrans.test(arr[Object.keys(arr)[k]])) {
+                    allcheck[multipatt[m]] = true;
+                }
+            }
+        }
+
+        for (let i = 0; i < multipatt.length; i++) {
+            if (allcheck[multipatt[i]] == false) {
+                mark = false;
+            }
+        }
+
+        if (mark) {
+            n.push(arr);
+        }
+    } else {
+        n.push(arr);
+    }
+}
+
 
 
 
@@ -273,12 +354,12 @@ startomnifilter = function (omnifdados, elemento, funcprocessa) {
      *  update of anything insider Omnifilter Function
      */
     document.getElementById(elemento).addEventListener('input', function (evt) {
-        let newomniarray = select(omnifdados, patterncheck, new RegExp(this.value, 'i'));
+        let newomniarray = select(omnifdados, multipatterncheck_exclude, this.value);
         funcprocessa(newomniarray);
     });
 
     console.log("Omnifilter: filtering event listener started");
 
-    let newomniarray = select(omnifdados, patterncheck, new RegExp(this.value, 'i'));
+    let newomniarray = select(omnifdados, multipatterncheck_exclude, "");
     funcprocessa(newomniarray);
 }
