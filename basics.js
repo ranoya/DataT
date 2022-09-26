@@ -32,6 +32,34 @@ getdata = function (arquivojson, callback) {
 
 }
 
+/**
+ * Get images from any kind of url
+ * (under improvement) 
+ * 
+ * Return the url for an image.
+ * If it is already an imagem, return the url;
+ * If it is a video, return the url from the thumnail.
+ * 
+ * Ex:
+ * 
+ * let photo = imagefromallsources('https://www.youtube.com/watch?v=ZbFATmGhz9k');
+ * 
+ */
+
+imagefromallsources = function (url) {
+  let video = url.match(
+    /(http:|https:|)\/\/(player.|www.|m.)?(vimeo\.com|youtu(be\.com|\.be|be\.googleapis\.com))\/(video\/|embed\/|watch\?v=|v\/)?([A-Za-z0-9._%-]*)(\&\S+)?/
+  );
+
+  if (RegExp.$3.indexOf("youtu") > -1) {
+    return "https://img.youtube.com/vi/" + RegExp.$6 + "/0.jpg";
+  }
+
+  if (url.match(/\.png|\.svg|\.jpg|\.gif|.webp/i)) {
+    return url;
+  }
+}
+
 
 /**
  * Boolean Filter
