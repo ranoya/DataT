@@ -46,18 +46,60 @@ getdata = function (arquivojson, callback) {
  * 
  */
 
-imagefromallsources = function (url) {
-  let video = url.match(
+imagefromallsources = function (murl) {
+  let video = "";
+
+  video = murl.match(
     /(http:|https:|)\/\/(player.|www.|m.)?(vimeo\.com|youtu(be\.com|\.be|be\.googleapis\.com))\/(video\/|embed\/|watch\?v=|v\/)?([A-Za-z0-9._%-]*)(\&\S+)?/
   );
 
-  if (RegExp.$3.indexOf("youtu") > -1) {
-    return "https://img.youtube.com/vi/" + RegExp.$6 + "/0.jpg";
+  if (typeof video != "undefined" && video != null) {
+    return "https://img.youtube.com/vi/" + video[6] + "/0.jpg";
+  } else if (murl.match(/\.png|\.svg|\.jpg|\.gif|.webp/i)) {
+    return murl;
   }
+}
 
-  if (url.match(/\.png|\.svg|\.jpg|\.gif|.webp/i)) {
-    return url;
-  }
+
+/**
+ * 
+ * Get a JSON from a Google Sheet using opensheet.elk.sh
+ * 
+ * Example:
+ * let mydata = googlesheet('https://docs.google.com/spreadsheets/d/1qXCwwsiNdZnqlvNzLxol-ZGRTEH7fQfRsK2SWpNIuM4/edit#gid=1417963869', 'Biblioteca');
+ *
+ * 
+ */
+
+googlesheet = function (url, aba) {
+  let arquivo = url.match(/spreadsheets\/d\/(.*)\/edit/i);
+
+  return `https://opensheet.elk.sh/${arquivo[1]}/${aba}`;
+}
+
+
+
+
+
+/**
+ * Get a CSV from Google Sheet
+ * 
+ * 
+ * Return a CSV file from the provided Google Sheet URL
+ * 
+ * Ex:
+ * 
+ * let mycsvdata = GoogleSheetData('https://docs.google.com/spreadsheets/d/1ih4V4CumuIl5ZynobsazNzGiaPrE2V2Dpt13FI22XNU/edit#gid=0')
+ * 
+ */
+
+
+
+GoogleSheetDataCSV = function(url) {
+  url = new URL(url);
+  const id = url.pathname.split("/")[3];
+  const gid = new URLSearchParams(url.hash.slice(1)).get("gid") || 0;
+  return `https://docs.google.com/spreadsheets/d/${id}/export?format=csv&gid=${gid}`
 }
 
 
