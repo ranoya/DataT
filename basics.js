@@ -73,7 +73,6 @@ imagefromallsources = function (murl) {
 
 googlesheet = function (url, aba) {
   let arquivo = url.match(/spreadsheets\/d\/(.*)\/edit/i);
-
   return `https://opensheet.elk.sh/${arquivo[1]}/${aba}`;
 }
 
