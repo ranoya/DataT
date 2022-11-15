@@ -47,9 +47,7 @@ const getdata = function (arquivojson, callback) {
  */
 
 const imagefromallsources = function (murl) {
-  imagefromallsources = function (murl) {
   let video = "";
-
   let nurl = murl.replace(/\&amp;/gi, "&");
 
   video = nurl.match(
@@ -63,7 +61,7 @@ const imagefromallsources = function (murl) {
   } else {
     return nurl;
   }
-}
+
 }
 
 
