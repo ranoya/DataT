@@ -23,7 +23,7 @@
  * 
  */
 
-getdata = function (arquivojson, callback) {
+const getdata = function (arquivojson, callback) {
 
     fetch(arquivojson).then(response => response.json()).then((dados) => {
 
@@ -46,7 +46,7 @@ getdata = function (arquivojson, callback) {
  * 
  */
 
-imagefromallsources = function (murl) {
+const imagefromallsources = function (murl) {
   let video = "";
 
   video = murl.match(
@@ -71,7 +71,7 @@ imagefromallsources = function (murl) {
  * 
  */
 
-googlesheet = function (url, aba) {
+const googlesheet = function (url, aba) {
   let arquivo = url.match(/spreadsheets\/d\/(.*)\/edit/i);
   return `https://opensheet.elk.sh/${arquivo[1]}/${aba}`;
 }
@@ -94,7 +94,7 @@ googlesheet = function (url, aba) {
 
 
 
-GoogleSheetDataCSV = function(url) {
+const GoogleSheetDataCSV = function(url) {
   url = new URL(url);
   const id = url.pathname.split("/")[3];
   const gid = new URLSearchParams(url.hash.slice(1)).get("gid") || 0;
@@ -122,7 +122,7 @@ GoogleSheetDataCSV = function(url) {
  * 
  */
 
-unique = function (arr, crit) {
+const unique = function (arr, crit) {
     let newarr = [];
 
     for (let i = 0; i < arr.length; i++) {
@@ -168,7 +168,7 @@ unique = function (arr, crit) {
  * 
  */
 
-sortbylist = function (arr, list, crit) {
+const sortbylist = function (arr, list, crit) {
     let newarr = [];
 
     for (let l = 0; l < list.length; l++) {
@@ -198,7 +198,7 @@ sortbylist = function (arr, list, crit) {
  * 
  */
 
-tags = function (arr, crit, separator) {
+const tags = function (arr, crit, separator) {
     let narr = [];
     let expl = [];
 
@@ -226,6 +226,44 @@ tags = function (arr, crit, separator) {
     return list;
 }
 
+/**
+ * Shuffle Function
+ * Create a list of numbers without repetition, for 
+ * random ordering itens of a list
+ * 
+ * Ex:
+ * neworderarray = shuffle(maxvalue, listsize);
+ * 
+ * Use:
+ * 
+ * order = suffle(myarray.length, 10);
+ * 
+ */
+
+const shuffle = function (maxvalue, listsize) {
+  let lista = [];
+  let c = 0;
+  let r = false;
+  let n = 0;
+
+  while (c < listsize) {
+    n = parseInt(Math.random() * maxvalue);
+
+    r = false;
+    for (let i = 0; i < lista.length; i++) {
+      if (n == lista[i]) {
+        r = true;
+      }
+    }
+
+    if (!r) {
+      lista[lista.length] = n;
+      c++;
+    }
+  }
+
+  return lista;
+}
 
 /**
  * Select Function
@@ -247,7 +285,7 @@ tags = function (arr, crit, separator) {
  * 
  */
 
-select = function (arr, fun, arr2) {
+const select = function (arr, fun, arr2) {
     let newarr = [];
 
     for (let i = 0; i < arr.length; i++) {
@@ -272,7 +310,7 @@ select = function (arr, fun, arr2) {
  * 
  */
 
-patterncheck = function (n, arr, patt) {
+const patterncheck = function (n, arr, patt) {
 
     let mark = false;
 
@@ -297,7 +335,7 @@ patterncheck = function (n, arr, patt) {
  * 
  */
 
-multipatterncheck_add = function (n, arr, patt) {
+const multipatterncheck_add = function (n, arr, patt) {
 
     if (patt != "" || typeof patt != "undefined") {
         let mark = false;
@@ -332,7 +370,7 @@ multipatterncheck_add = function (n, arr, patt) {
  */
 
 
-multipatterncheck_exclude = function (n, arr, patt) {
+const multipatterncheck_exclude = function (n, arr, patt) {
 
     if (patt != "" || typeof patt != "undefined") {
 
@@ -404,7 +442,7 @@ multipatterncheck_exclude = function (n, arr, patt) {
  */
 
 let omnifdados = [];
-omnifilterfetchdata = function (arquivojson, el_id) {
+let omnifilterfetchdata = function (arquivojson, el_id) {
     // Fetch JSON file
     fetch(arquivojson).then(response => response.json()).then((omnifdados) => {
         //Start Omnifilter Event Listener Function
@@ -413,7 +451,7 @@ omnifilterfetchdata = function (arquivojson, el_id) {
 }
 
 // Omnifilter Event Listener Function
-startomnifilter = function (omnifdados, elemento, funcprocessa) {
+let startomnifilter = function (omnifdados, elemento, funcprocessa) {
     console.log("Omnifilter: fetch finished");
     console.table(omnifdados);
 
