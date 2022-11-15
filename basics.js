@@ -47,17 +47,23 @@ const getdata = function (arquivojson, callback) {
  */
 
 const imagefromallsources = function (murl) {
+  imagefromallsources = function (murl) {
   let video = "";
 
-  video = murl.match(
+  let nurl = murl.replace(/\&amp;/gi, "&");
+
+  video = nurl.match(
     /(http:|https:|)\/\/(player.|www.|m.)?(vimeo\.com|youtu(be\.com|\.be|be\.googleapis\.com))\/(video\/|embed\/|watch\?v=|v\/)?([A-Za-z0-9._%-]*)(\&\S+)?/
   );
 
   if (typeof video != "undefined" && video != null) {
     return "https://img.youtube.com/vi/" + video[6] + "/0.jpg";
-  } else if (murl.match(/\.png|\.svg|\.jpg|\.gif|.webp/i)) {
-    return murl;
+  } else if (nurl.match(/\.png|\.svg|\.jpg|\.gif|.webp/i)) {
+    return nurl;
+  } else {
+    return nurl;
   }
+}
 }
 
 
