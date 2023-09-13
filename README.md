@@ -11,10 +11,10 @@ Small functions to help dealing with data in javascript. Tools for manipulating 
 Load the library from the web if you wish:
 
 ```html
-<script src="https://www.ranoya.com/Assets/JSLibs/DataT/basics.js"></script>
+<script src="datat.vercel.app/basics.js"></script>
 ```
 
-The reference and examples are commented in the [source code](https://www.ranoya.com/Assets/JSLibs/DataT/basics.js).
+The reference and examples are commented in the [source code](datat.vercel.app/basics.js).
 
 ### Fetch function
 
