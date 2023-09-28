@@ -369,6 +369,15 @@ const patterncheck = function (n, arr, patt) {
 }
 
 /**
+ * shortcut
+ */
+
+const selectp = function(oldarray, patt) {
+    return select(oldarray, patterncheck, patt);
+}
+
+
+/**
  * Additive multipattern check
  * Include any finding of any patterns separated by space
  * 
@@ -403,6 +412,15 @@ const multipatterncheck_add = function (n, arr, patt) {
 }
 
 /**
+ * shortcut
+ */
+
+const selecta = function(oldarray, str) {
+    return select(oldarray, multipatterncheck_add, str);
+}
+
+
+/**
  * Exclusion multipattern check
  * Include findings when all patterns separated by space are present
  * 
@@ -411,7 +429,6 @@ const multipatterncheck_add = function (n, arr, patt) {
  * newarray = select(oldarray, multipatterncheck_exclude, "slide class");
  * 
  */
-
 
 const multipatterncheck_exclude = function (n, arr, patt) {
 
@@ -447,6 +464,14 @@ const multipatterncheck_exclude = function (n, arr, patt) {
     } else {
         n.push(arr);
     }
+}
+
+/**
+ * shortcut
+ */
+
+const selecte = function(oldarray, str) {
+    return select(oldarray, multipatterncheck_exclude, str);
 }
 
 
