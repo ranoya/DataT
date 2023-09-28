@@ -93,7 +93,8 @@ const $ = function (str) {
       captTAGSIDSCLASS = captTAGSIDS;
     }
 
-    if (captTAGSIDSCLASS.length == 1) {
+  if (captTAGSIDSCLASS.length == 1) {
+    captTAGSIDSCLASS[0].$ = $;
       return captTAGSIDSCLASS[0];
     } else {
       return captTAGSIDSCLASS;
