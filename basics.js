@@ -105,6 +105,23 @@ const GoogleSheetDataCSV = function(url) {
   return `https://docs.google.com/spreadsheets/d/${id}/export?format=csv&gid=${gid}`
 }
 
+/**
+ * Re-scale
+ * Create a function that recalculates a value in 
+ * a different scale
+ * 
+ * Ex:
+ * 
+ * const y = rescale([0,1],[50,70]);
+ * let xpto = y(0.5); // = 60
+ * 
+ */
+
+const rescale = function ([a, b], [c, d]) {
+  return function (e) {
+    return ((e - a) / (b - a)) * (d - c) + c;
+  };
+}
 
 /**
  * Boolean Filter
@@ -116,7 +133,7 @@ const GoogleSheetDataCSV = function(url) {
  * 
  */
 
-bfilter = function (arr, crit) {
+const bfilter = function (arr, crit) {
   let newarr = [];
   let c = 0;
   for (let k = 0; k < arr.length; k++) {
@@ -139,7 +156,7 @@ bfilter = function (arr, crit) {
  * 
  */
 
-cfilter = function (arr, crit, regex) {
+const cfilter = function (arr, crit, regex) {
   let newarr = [];
 
   let patt = new RegExp(regex, "i");
