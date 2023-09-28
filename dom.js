@@ -95,10 +95,18 @@ const $ = function (str) {
 
   if (captTAGSIDSCLASS.length == 1) {
     captTAGSIDSCLASS[0].$ = $;
-      return captTAGSIDSCLASS[0];
-    } else {
-      return captTAGSIDSCLASS;
+    captTAGSIDSCLASS[0].$$ = $$;
+    return captTAGSIDSCLASS[0];
+  } else {
+
+    for (let k = 0; k < captTAGSIDSCLASS.length; k++) {
+      captTAGSIDSCLASS[k].$ = $;
+      captTAGSIDSCLASS[k].$$ = $$;
     }
+    
+    return captTAGSIDSCLASS;
+    
+  }
   };
 
 
@@ -190,6 +198,11 @@ const $ = function (str) {
       }
     } else {
       captTAGSIDSCLASS = captTAGSIDS;
+    }
+
+    for (let k = 0; k < captTAGSIDSCLASS.length; k++) {
+      captTAGSIDSCLASS[k].$ = $;
+      captTAGSIDSCLASS[k].$$ = $$;
     }
 
     return captTAGSIDSCLASS;
