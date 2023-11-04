@@ -20,16 +20,55 @@ var keymapping = []; // mapeamento de teclas pressionadas;
 */
 
 const screen = function (el) {
-    let q = {};
-    let rect = document.querySelector(el).getBoundingClientRect();
-    q.top = rect.top;
-    q.bottom = rect.bottom;
-    q.left = rect.left;
-    q.right = rect.right;
-    q.width = rect.width;
-    q.height = rect.height;
-    q.offsetLeft = document.querySelector(el).offsetLeft;
-    q.offestTop = document.querySelector(el).offsetTop;
+
+    let q = {
+        rect: document.querySelector(el).getBoundingClientRect(),
+        itself: document.querySelector(el),
+        get top() { 
+            return this.rect.top;
+        },
+        get bottom() { 
+            return this.rect.bottom;
+        },
+        get left() { 
+            return this.rect.left;
+        },
+        get right() { 
+            return this.rect.right;
+        },
+        get width() { 
+            return this.rect.width;
+        },
+        get height() { 
+            return this.rect.height;
+        },
+        get offsetLeft() { 
+            return this.itself.offsetLeft
+        },
+        get offsetTop() { 
+            return this.itself.offsetTop
+        },
+        set top(v) {
+            this.itself.style.top = v;
+        },
+        set bottom(v) {
+            this.itself.style.bottom = v;
+        },
+        set left(v) {
+            this.itself.style.left = v;
+        },
+        set right(v) {
+            this.itself.style.right = v;
+        },
+        set width(v) {
+            this.itself.style.width = v;
+        },
+        set height(v) {
+            this.itself.style.height = v;
+        }
+
+    };
+    
     return q;
 };
 
