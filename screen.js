@@ -7,6 +7,8 @@ var screenHeight = window.innerHeight; // tamanho da Tela;
 var mouseX = 0; // posicao do Mouse na Tela;
 var mouseY = 0; // posicao do Mouse na Tela;
 var keymapping = []; // mapeamento de teclas pressionadas;
+var mobileSize = window.innerWidth < 650;
+var badScroll = (window.navigator.platform.toString().indexOf("Win") >= 0 || window.navigator.platform.toString().indexOf("Linux") >= 0);
 
 
 const screen = function (el) {
@@ -188,6 +190,7 @@ const mouselogic = function (e) {
 const interfacelogic = function (e) {
     screenWidth = window.innerWidth;
     screenHeight = window.innerHeight;
+    mobileSize = window.innerWidth < 650;
 
     onScreen(e);
 
