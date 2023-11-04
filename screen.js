@@ -8,16 +8,6 @@ var mouseX = 0; // posicao do Mouse na Tela;
 var mouseY = 0; // posicao do Mouse na Tela;
 var keymapping = []; // mapeamento de teclas pressionadas;
 
-/*
-    obj('wrap').top // posição em relação ao topo da tela
-    obj('wrap').bottom // posição em relação ao fundo da tela
-    obj('wrap').left // posição em relação à margem esquerda
-    obj('wrap').right // posição em relação à margem direita
-    obj('wrap').width // dimensão horizontal do elemento
-    obj('wrap').height // dimensão vertical do elemento
-    obj('wrap').offsetLeft // distância relativa da margem esquerda do parent
-    obj('wrap').offsetTop // distância relativa da margem superior do parent
-*/
 
 const screen = function (el) {
 
@@ -65,12 +55,100 @@ const screen = function (el) {
         },
         set height(v) {
             this.itself.style.height = v;
+        },
+        set marginLeft(v) {
+            this.itself.style.marginLeft = v;
+        },
+        set marginRight(v) {
+            this.itself.style.marginRight = v;
+        },
+        set marginTop(v) {
+            this.itself.style.marginTop = v;
+        },
+        set marginBottom(v) {
+            this.itself.style.marginBottom = v;
+        },
+        set paddingTop(v) {
+            this.itself.style.paddingTop = v;
+        },
+        set paddingLeft(v) {
+            this.itself.style.paddingLeft = v;
+        },
+        set paddingBottom(v) {
+            this.itself.style.paddingBottom = v;
+        },
+        set paddingRight(v) {
+            this.itself.style.paddingRight = v;
+        },
+        set display(v) {
+            this.itself.style.display = v;
+        },
+        set position(v) {
+            this.itself.style.position = v;
+        },
+        set border(v) {
+            this.itself.style.border = v;
+        },
+        set backgroundColor(v) {
+            this.itself.style.backgroundColor = v;
+        },
+        set color(v) {
+            this.itself.style.color = v;
+        },
+        set overflow(v) {
+            this.itself.style.overflow = v;
+        },
+        set backgroundImage(v) {
+            this.itself.style.backgroundImage = v;
+        },
+        set backgroundRepeat(v) {
+            this.itself.style.backgroundRepeat = v;
+        },
+        set backgroundPosition(v) {
+            this.itself.style.backgroundPosition = v;
+        },
+        set backgroundSize(v) {
+            this.itself.style.backgroundSize = v;
         }
-
     };
     
     return q;
 };
+
+// Captura ou define valor de variáveis CSS
+const cssv = function (v) {
+    
+    let q = {
+        set value(str) { 
+            document.documentElement.style.setProperty(v,str)
+        },
+        get value() {
+            return getComputedStyle(document.documentElement)
+    .getPropertyValue(v);
+        }
+    }
+
+    return q;
+
+}
+
+// Adiciona ou remove classes CSS
+const css = function (el) {
+    let q = {
+        itself: document.querySelector(el),
+        set add(v) {
+            this.itself.classList.add(v);
+        },
+        set remove(v) {
+            this.itself.classList.remove(v);
+        },
+        get classes() {
+            return this.itself.classList;
+        }
+    }
+
+    return q;
+}
 
 // Faz Scroll na página até um elemento
 const goto = function (el) {
