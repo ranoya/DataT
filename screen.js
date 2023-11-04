@@ -12,8 +12,8 @@ var keymapping = []; // mapeamento de teclas pressionadas;
 const screen = function (el) {
 
     let q = {
-        rect: document.querySelector(el).getBoundingClientRect(),
-        itself: document.querySelector(el),
+        rect: el.getBoundingClientRect(),
+        itself: el,
         get top() { 
             return this.rect.top;
         },
@@ -135,7 +135,7 @@ const cssv = function (v) {
 // Adiciona ou remove classes CSS
 const css = function (el) {
     let q = {
-        itself: document.querySelector(el),
+        itself: el,
         set add(v) {
             this.itself.classList.add(v);
         },
@@ -153,17 +153,28 @@ const css = function (el) {
 // Faz Scroll na página até um elemento
 const goto = function (el) {
     window.scrollTo({
-    top: document.getElementById(el).offsetTop - 100,
+    top: el.offsetTop - 100,
     behavior: 'smooth',
     });
 };
 
 // Atualiza dados dos inputs
-const dataupdate = function (arg,inputnumber) {
-    let inpt = document.getElementsByTagName('input')[inputnumber];
-    inpt.value = arg;
-    inpt.dispatchEvent(new Event('input', { bubbles: true }));
-};
+const input = function (el) {
+    
+    let q = {
+        itself: el,
+        set value(str) {
+            this.itself.value = str;
+            this.itself.dispatchEvent(new Event('input', { bubbles: true }))
+        },
+        get value() {
+            return this.itself.value;
+        }
+    }
+
+    return q;
+    
+}
 
 // Lógica para mouse
 const mouselogic = function (e) {
