@@ -3,6 +3,12 @@
 <html>
   <head>
     <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
       #xaxis {
         height: 1px;
         width: 100vw;
@@ -28,10 +34,11 @@
         position: fixed;
         top: 20px;
         left: 20px;
+        z-index: 300;
       }
 
       #menubutton:hover {
-        background-color: black;
+        background-color: black !important;
       }
 
       #menu {
@@ -39,9 +46,11 @@
         height: 100vh;
         background-color: blue;
         width: var(--menu-width, 320px);
-        right: var(--menu-width, 320px);
+        right: calc(-1 * (var(--menu-width, 320px) + 20px));
         z-index: 10;
         transition: all 0.4s ease-in;
+        color: white;
+        padding: 10px;
       }
 
       .menuvisible {
@@ -57,7 +66,7 @@
         z-index: 200;
         background-color: #444444;
         color: white;
-        font-weight: bold;
+        padding: 10px;
       }
     </style>
 
@@ -65,8 +74,11 @@
   </head>
 
   <body>
-    <div id="menu"></div>
-    <div id="menubutton"></div>
+    <div id="menu">
+      <br /><br /><br /><br /><br /><br />
+      Will adjust to fullscreen menu when the width is small (mobile)
+    </div>
+    <a id="menubutton" href="javascript:togglemenu();"></a>
     <div id="xaxis"></div>
     <div id="yaxis"></div>
     <div id="label"></div>
@@ -77,10 +89,12 @@
       // onScreen
       let onScreen = function () {
         if (mobileSize) {
-          cssVar("--menu-width").value = "100vw";
+          cssVar("--menu-width").value = "calc(100vw - 20px)";
         } else {
           cssVar("--menu-width").value = "320px";
         }
+
+        updtateinfo();
       };
 
       // onMouse
@@ -91,6 +105,24 @@
         screen("#label").left = mouseX + 30 + "px";
         screen("#label").top = mouseY + 30 + "px";
 
+        updtateinfo();
+      };
+
+      // onKeys
+      let onKeys = function (e) {
+        allkeyspressed = "";
+
+        for (let k in keymapping) {
+          if (keymapping[k] == true) {
+            allkeyspressed += String.fromCharCode(k) + " ";
+          }
+        }
+
+        updtateinfo();
+      };
+
+      // update text content
+      let updtateinfo = function () {
         screen("#label").innerHTML = `
             Screen Size = ${screenWidth} x ${screenHeight}<br>
             Mouse Position = ${mouseX} x ${mouseY}<br>
@@ -99,13 +131,13 @@
             `;
       };
 
-      // onKeys
-      let onKeys = function (e) {
-        keymapping.map = function (v, k) {
-          if (k) {
-            allkeyspressed += e.key + " ";
-          }
-        };
+      // open and close menu
+      let togglemenu = function () {
+        if (screen("#menu").class[0] == "menuvisible") {
+          screen("#menu").removeCSS("menuvisible");
+        } else {
+          screen("#menu").addCSS("menuvisible");
+        }
       };
     </script>
   </body>
