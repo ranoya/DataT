@@ -13,9 +13,16 @@ var badScroll = (window.navigator.platform.toString().indexOf("Win") >= 0 || win
 
 const screen = function (el) {
 
+    let elemento = "";
+    if (typeof el == "string") {
+        elemento = document.querySelector(el);
+    } else {
+        elemento = el;
+    }
+
     let q = {
-        rect: el.getBoundingClientRect(),
-        itself: el,
+        rect: elemento.getBoundingClientRect(),
+        itself: elemento,
         get top() { 
             return this.rect.top;
         },
@@ -136,8 +143,16 @@ const cssv = function (v) {
 
 // Adiciona ou remove classes CSS
 const css = function (el) {
+    
+    let elemento = "";
+    if (typeof el == "string") {
+        elemento = document.querySelector(el);
+    } else {
+        elemento = el;
+    }
+
     let q = {
-        itself: el,
+        itself: elemento,
         set add(v) {
             this.itself.classList.add(v);
         },
@@ -154,8 +169,16 @@ const css = function (el) {
 
 // Faz Scroll na página até um elemento
 const goto = function (el) {
+    
+    let elemento = "";
+    if (typeof el == "string") {
+        elemento = document.querySelector(el);
+    } else {
+        elemento = el;
+    }
+
     window.scrollTo({
-    top: el.offsetTop - 100,
+    top: elemento.offsetTop - 100,
     behavior: 'smooth',
     });
 };
@@ -163,8 +186,15 @@ const goto = function (el) {
 // Atualiza dados dos inputs
 const input = function (el) {
     
+    let elemento = "";
+    if (typeof el == "string") {
+        elemento = document.querySelector(el);
+    } else {
+        elemento = el;
+    }
+    
     let q = {
-        itself: el,
+        itself: elemento,
         set value(str) {
             this.itself.value = str;
             this.itself.dispatchEvent(new Event('input', { bubbles: true }))
