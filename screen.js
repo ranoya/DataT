@@ -124,6 +124,15 @@ const screen = function (el) {
         },
         set innerHTML(v) {
             this.itself.innerHTML = v;
+        },
+        addCSS: function (v) {
+            this.itself.classList.add(v);
+        },
+        removeCSS: function (v) {
+            this.itself.classList.remove(v);
+        },
+        get class() {
+            return this.itself.classList;
         }
     };
     
@@ -131,7 +140,7 @@ const screen = function (el) {
 };
 
 // Captura ou define valor de variáveis CSS
-const cssv = function (v) {
+const cssVar = function (v) {
     
     let q = {
         set value(str) { 
@@ -145,32 +154,6 @@ const cssv = function (v) {
 
     return q;
 
-}
-
-// Adiciona ou remove classes CSS
-const css = function (el) {
-    
-    let elemento = "";
-    if (typeof el == "string") {
-        elemento = document.querySelector(el);
-    } else {
-        elemento = el;
-    }
-
-    let q = {
-        itself: elemento,
-        set add(v) {
-            this.itself.classList.add(v);
-        },
-        set remove(v) {
-            this.itself.classList.remove(v);
-        },
-        get classes() {
-            return this.itself.classList;
-        }
-    }
-
-    return q;
 }
 
 // Faz Scroll na página até um elemento
