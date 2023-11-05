@@ -1,4 +1,27 @@
+/*
 
+let onScreen = function (e) {
+    
+    console.log("onScreen()");
+    console.log("screenWidth=" + screenWidth + " / " + "screenHeight=" + screenHeight);
+
+}
+
+let onKeys = function (e) {
+    
+    console.log("onKeys()");
+    console.table(keymapping);
+}
+
+let onMouse = function (e) {
+    
+    console.log("onMouse()");
+    console.log("mouseX=" + mouseX + " / " + "mouseY=" + mouseY);
+
+}
+
+
+*/
 
 // Interface Manager
 
@@ -202,7 +225,9 @@ const mouselogic = function (e) {
     mouseX = e.clientX;
     mouseY = e.clientY;
 
-    onMouse(e);
+    if (typeof onMouse != "undefined") {
+        onMouse(e);
+    }
 };
 
 // Lógica para os elementos da interface
@@ -211,7 +236,10 @@ const interfacelogic = function (e) {
     screenHeight = window.innerHeight;
     mobileSize = window.innerWidth < 650;
 
-    onScreen(e);
+    if (typeof onScreen != "undefined") {
+        onScreen(e);
+    }
+    
 
 };
 
@@ -225,28 +253,10 @@ const keyboardlogic = function (e) {
 
     }
 
-    onKeys(e);
+    if (typeof onKeys != "undefined") {
+        onKeys(e);
+    }
 };
-
-let onScreen = function (e) {
-    
-    console.log("onScreen()");
-    console.log("screenWidth=" + screenWidth + " / " + "screenHeight=" + screenHeight);
-
-}
-
-let onKeys = function (e) {
-    
-    console.log("onKeys()");
-    console.table(keymapping);
-}
-
-let onMouse = function (e) {
-    
-    console.log("onMouse()");
-    console.log("mouseX=" + mouseX + " / " + "mouseY=" + mouseY);
-
-}
 
 window.onscroll = interfacelogic;
 window.onresize = interfacelogic;

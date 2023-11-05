@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <style>
+      #xaxis {
+        height: 1px;
+        width: 100vw;
+        background-color: grey;
+        position: fixed;
+        z-index: 100;
+        top: var(--axis-top, 0);
+      }
+
+      #yaxis {
+        width: 1px;
+        height: 100vh;
+        background-color: grey;
+        position: fixed;
+        z-index: 100;
+        left: var(--axis-left, 0);
+      }
+
+      #menubutton {
+        background-color: red;
+        width: 30px;
+        height: 30px;
+        position: fixed;
+        top: 20px;
+        left: 20px;
+      }
+
+      #menubutton:hover {
+        background-color: black;
+      }
+
+      #menu {
+        position: fixed;
+        height: 100vh;
+        background-color: blue;
+        width: var(--menu-width, 320px);
+        right: var(--menu-width, 320px);
+        z-index: 10;
+        transition: all 0.4s ease-in;
+      }
+
+      .menuvisible {
+        right: 0px !important;
+      }
+
+      #label {
+        width: 200px;
+        height: 130px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 200;
+        background-color: #444444;
+        color: white;
+        font-weight: bold;
+      }
+    </style>
+
+    <script src="https://datat.vercel.app/screen.js"></script>
+  </head>
+
+  <body>
+    <div id="menu"></div>
+    <div id="menubutton"></div>
+    <div id="xaxis"></div>
+    <div id="yaxis"></div>
+    <div id="label"></div>
+
+    <script>
+      let allkeyspressed = "";
+
+      // onScreen
+      let onScreen = function () {
+        if (mobileSize) {
+          cssVar("--menu-width").value = "100vw";
+        } else {
+          cssVar("--menu-width").value = "320px";
+        }
+      };
+
+      // onMouse
+      let onMouse = function () {
+        cssVar("--axis-left").value = mouseX + "px";
+        cssVar("--axis-top").value = mouseY + "px";
+
+        screen("#label").left = mouseX + 30 + "px";
+        screen("#label").top = mouseY + 30 + "px";
+
+        screen("#label").innerHTML = `
+            Screen Size = ${screenWidth} x ${screenHeight}<br>
+            Mouse Position = ${mouseX} x ${mouseY}<br>
+            Mobile Size Screen = ${mobileSize}<br>
+            Keys Pressed = ${allkeyspressed}
+            `;
+      };
+
+      // onKeys
+      let onKeys = function (e) {
+        keymapping.map = function (v, k) {
+          if (k) {
+            allkeyspressed += e.key + " ";
+          }
+        };
+      };
+    </script>
+  </body>
+</html>
