@@ -118,6 +118,12 @@ const screen = function (el) {
         },
         set backgroundSize(v) {
             this.itself.style.backgroundSize = v;
+        },
+        set zIndex(v) {
+            this.itself.style.zIndex = v;
+        },
+        set innerHTML(v) {
+            this.itself.innerHTML = v;
         }
     };
     
