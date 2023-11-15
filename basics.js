@@ -47,7 +47,13 @@ const getdata = function (arquivojson, callback) {
  */
 
 const imagefromallsources = function (murl) {
-  let video = "";
+    let video = "";
+    
+    if (murl.match(/https:\/\/drive\.google\.com\/open\?(.*)\&/i)) {
+        let complementa = murl.match(/https:\/\/drive\.google\.com\/open\?(.*)\&/i)[1];
+        video = "https://drive.google.com/uc?export=view&"+complementa+"&usp=drive_fs"
+  }
+
   let nurl = murl.replace(/\&amp;/gi, "&");
 
   video = nurl.match(
