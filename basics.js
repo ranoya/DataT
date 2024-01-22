@@ -55,10 +55,18 @@ const imagefromallsources = function (murl) {
     let complementa = murl.match(
       /https:\/\/drive\.google\.com\/open\?(.*)\&/i
     )[1];
+
+    /* OLD
     saida =
       "https://drive.google.com/uc?export=view&" +
       complementa +
       "&usp=drive_fs";
+    */
+    
+    saida =
+      "https://lh3.googleusercontent.com/d/" +
+      complementa;
+    
   }
 
   if (murl.match(/https:\/\/drive\.google\.com\/file\/d/i)) {
@@ -66,10 +74,16 @@ const imagefromallsources = function (murl) {
       /https:\/\/drive\.google\.com\/file\/d\/(.*)\/view/i
     )[1];
 
+    /* OLD
     saida =
       "https://drive.google.com/uc?export=view&id=" +
       complementa +
       "&usp=drive_fs";
+    */
+    
+    saida =
+      "https://lh3.googleusercontent.com/d/" +
+      complementa;
   }
 
   let nurl = murl.replace(/\&amp;/gi, "&");
