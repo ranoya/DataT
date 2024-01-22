@@ -86,6 +86,16 @@ const imagefromallsources = function (murl) {
       complementa;
   }
 
+  if (murl.match(/https:\/\/drive\.google\.com\/uc\?export=view/i)) {
+    let complementa = murl.match(
+      /id=(.*)/i
+    )[1];
+    
+    saida =
+      "https://lh3.googleusercontent.com/d/" +
+      complementa;
+  }
+
   let nurl = murl.replace(/\&amp;/gi, "&");
 
   let video = nurl.match(
