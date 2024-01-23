@@ -51,7 +51,7 @@ const imagefromallsources = function (murl) {
 
   let saida = murl;
 
-  if (murl.match(/https:\/\/drive\.google\.com\/open\?(.*)\&/i)) {
+  if (murl.match(/https:\/\/drive\.google\.com\/open\?id=(.*)\&/i)) {
     let complementa = murl.match(
       /https:\/\/drive\.google\.com\/open\?(.*)\&/i
     )[1];
