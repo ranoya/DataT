@@ -292,6 +292,29 @@ const sortbylist = function (arr, list, crit) {
     return newarr;
 }
 
+/**
+ * Sort by alphabetic order
+ * Sort an array in alphabetic order over the values for a specific key
+ * 
+ * Ex:
+ * 
+ * newarray = alphabetic(oldarray, key);
+ * 
+ * Use:
+ * 
+ * students = alphabetic(list, 'name');
+ * 
+ */
+
+const alphabetic = function (arr, crit) {
+  let listuniques = unique(arr, crit);
+  listuniques.sort();
+
+  let newarr = sortbylist(arr, listuniques, crit);
+
+  return newarr;
+}
+
 
 /**
  * Extract all Tags
