@@ -46,14 +46,19 @@ const getdata = function (arquivojson, callback) {
  * 
  */
 
-const imagefromallsources = function (murl) {
+const imagefromallsources = function (kurl) {
     // FUNÇÃO IMAGE FROM ALL SOURCES
 
-  let saida = murl;
+  let saida = kurl;
+  let murl = kurl;
 
-  if (murl.match(/https:\/\/drive\.google\.com\/open\?(.*)\&/i)) {
+  if (kurl.match(/(\&$)/gm)) {
+    murl = kurl.replace(/(\&$)/gm, "");
+  }
+
+  if (murl.match(/https:\/\/drive\.google\.com\/open\?(.*)/i)) {
     let complementa = murl.match(
-      /https:\/\/drive\.google\.com\/open\?id=(.*)\&/i
+      /https:\/\/drive\.google\.com\/open\?id=(.*)/i
     )[1];
 
     /* OLD
@@ -154,6 +159,43 @@ const GoogleSheetDataCSV = function(url) {
   const gid = new URLSearchParams(url.hash.slice(1)).get("gid") || 0;
   return `https://docs.google.com/spreadsheets/d/${id}/export?format=csv&gid=${gid}`
 }
+
+
+/**
+ * 
+ * CSV Parser
+ * 
+ * Return a JSON from a CSV String
+ * 
+ * let myjson = dtParseCsv(GoogleSheetData('https://docs.google.com/spreadsheets/d/1ih4V4CumuIl5ZynobsazNzGiaPrE2V2Dpt13FI22XNU/edit#gid=0'))
+ * 
+ */
+
+const dtParseCsv = function (str) {
+
+  const lines = str.split('\n');
+  const headers = lines[0].split(',');
+
+  const result = [];
+
+  for (let i = 1; i < lines.length; i++) {
+    const currentLine = lines[i].split(',');
+
+    if (currentLine.length === headers.length) {
+
+      const obj = {};
+      for (let j = 0; j < headers.length; j++) {
+        obj[headers[j]] = currentLine[j];
+      }
+
+      result.push(obj);
+    }
+  }
+
+  return result;
+}
+
+
 
 /**
  * Re-scale
