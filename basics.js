@@ -64,7 +64,7 @@ const getcsvdata = function (csvurl, callback) {
 
         let arr = [];
 
-        for (let i = 0; i < linhas.length; i++) {
+        for (let i = 1; i < linhas.length; i++) {
           arr[i - 1] = {};
           linhadados = linhas[i].split(/[,]{1}(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))/);
 
@@ -722,7 +722,7 @@ let omnifilterfetchcsvdata = function (csvurl, el_id) {
 
         let arr = [];
 
-        for (let i = 0; i < linhas.length; i++) {
+        for (let i = 1; i < linhas.length; i++) {
           arr[i - 1] = {};
           linhadados = linhas[i].split(/[,]{1}(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))/);
 
@@ -741,6 +741,14 @@ let omnifilterfetchcsvdata = function (csvurl, el_id) {
               linhadados[k].substring(0, 2) == '\"'
             ) {
               temp1 = linhadados[k].substring(2);
+            } else {
+              temp1 = linhadados[k];
+            }
+
+            if (
+              linhadados[k].substring(1, 2) == '"'
+            ) {
+              temp1 = linhadados[k].substring(2, linhadados[k].length);
             } else {
               temp1 = linhadados[k];
             }
