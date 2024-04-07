@@ -712,6 +712,8 @@ let omnifilterfetchcsvdata = function (csvurl, el_id) {
             valorfinal = temp1.replace(/""/g, '"');
 
             arr[i - 1][heads[k]] = valorfinal;
+
+            console.log(i - 1 + ": " + heads[k] + " " + valorfinal);
           }
         }
       
