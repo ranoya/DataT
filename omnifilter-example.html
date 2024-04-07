@@ -1,48 +1,49 @@
-<script src="https://www.ranoya.com/Assets/JSLibs/DataT/basics.js"></script>
+<script src="https://datat.vercel.app/basics.js"></script>
 <script>
-    // Omnifilter Function
-    omnifilter = function (arr) {
+  // Omnifilter Function
+  omnifilter = function (arr) {
+    /**
+     * In this example, we create a simple list of links
+     * using de "titulomaterial" key and "link" key in
+     * provided JSON registries.
+     *
+     * Every time the <input> element changes, the list
+     * will be rebuilt, filtering the JSON data, returnin
+     * only the entries that have values (in any of their
+     * keys) that match the content of the <input>.
+     *
+     */
 
-        /**
-         * In this example, we create a simple list of links
-         * using de "titulomaterial" key and "link" key in 
-         * provided JSON registries.
-         * 
-         * Every time the <input> element changes, the list
-         * will be rebuilt, filtering the JSON data, returnin
-         * only the entries that have values (in any of their
-         * keys) that match the content of the <input>.
-         * 
-         */
-
-        let htmlcode = "";
-        htmlcode = "<b>Total of " + arr.length + " results</b><br>";
-        for (let i = 0; i < arr.length; i++) {
-            htmlcode += "<a target='_blank' + href='" + arr[i].link + "'>" + arr[i].titulomaterial + "</a><br>";
-        }
-
-        console.table(arr);
-        document.getElementById('contents').innerHTML = htmlcode;
-
+    let htmlcode = "";
+    htmlcode = "<b>Total of " + arr.length + " results</b><br>";
+    for (let i = 0; i < arr.length; i++) {
+      htmlcode +=
+        "<a target='_blank' + href='" +
+        arr[i].link +
+        "'>" +
+        arr[i].titulomaterial +
+        "</a><br>";
     }
 
-    omnifilterfetchdata("https://opensheet.elk.sh/1d9eKw82lnM5GvVkBUe8wLcHSxpmDm5B6dUqWRbazOik/MATERIAIS_VISSE",
-        "myinput");
+    console.table(arr);
+    document.getElementById("contents").innerHTML = htmlcode;
+  };
+
+  omnifilterfetchdata(
+    "https://opensheet.elk.sh/1d9eKw82lnM5GvVkBUe8wLcHSxpmDm5B6dUqWRbazOik/MATERIAIS_VISSE",
+    "myinput"
+  );
 </script>
-
-
 
 <meta charset="UTF-8" />
 
-Look the console for the complete information been filtered/searched.<br>
+Look the console for the complete information been filtered/searched.<br />
 Omnifilter searchs in every key/field of the JSON data.
-<br>
+<br />
 
 <!-- YOU WILL NEED A INPUT TEXT ELEMENT, THIS IS THE xpto ELEMENT -->
 <input type="text" id="myinput" />
 
+<br /><br />
 
-<br><br>
-
-<div id='contents'>
-</div>
+<div id="contents"></div>

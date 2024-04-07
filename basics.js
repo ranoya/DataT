@@ -58,6 +58,7 @@ const getcsvdata = function (csvurl, callback) {
         let linhadados = "";
         let valorfinal = "";
         let temp1 = "";
+        let temp2 = "";
 
         let heads = linhas[0].split(",");
 
@@ -65,24 +66,52 @@ const getcsvdata = function (csvurl, callback) {
 
         for (let i = 0; i < linhas.length; i++) {
           arr[i - 1] = {};
-          linhadados = linhas[i].split(",");
+          linhadados = linhas[i].split(/[,]{1}(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))/);
 
           for (let k = 0; k < linhadados.length; k++) {
+            linhadados[k].trim();
+
             if (
-              linhadados[k].substring(0, 1) == '"' &&
-              linhadados[k].substring(
-                linhadados[k].length - 1,
-                linhadados[k].length
-              ) == '"'
+              linhadados[k].substring(0, 1) == '"'
             ) {
-              temp1 = linhadados[k].substring(1, linhadados[k].length - 1);
+              temp1 = linhadados[k].substring(1, linhadados[k].length);
             } else {
               temp1 = linhadados[k];
             }
 
-            valorfinal = temp1.replace(/""/g, '"');
+            if (
+              linhadados[k].substring(0, 2) == '\"'
+            ) {
+              temp1 = linhadados[k].substring(2);
+            } else {
+              temp1 = linhadados[k];
+            }
+
+            if (
+              temp1.substring(
+                temp1.length - 2,
+                temp1.length
+              ) == '\"'
+            ) {
+              temp1 = temp1.substring(0, temp1.length - 2);
+            } 
+
+            if (
+              temp1.substring(
+                temp1.length - 1,
+                temp1.length
+              ) == '"'
+            ) {
+              temp2 = temp1.substring(0, temp1.length - 1);
+            } else {
+              temp2 = temp1;
+            }
+
+            valorfinal = temp2.replace(/""/g, '"');
 
             arr[i - 1][heads[k]] = valorfinal;
+
+            console.log(i - 1 + ": " + heads[k] + " " + valorfinal);
           }
         }
 
@@ -683,14 +712,11 @@ let omnifilterfetchcsvdata = function (csvurl, el_id) {
     // Fetch CSV file
   fetch(csvurl).then(response => response.text()).then((dados) => {
 
-        console.log("rodou omnifilterfetchcsvdata");
-      
-        console.log(dados);
-
         let linhas = dados.split(/\r?\n|\r|\n/g);
         let linhadados = "";
         let valorfinal = "";
         let temp1 = "";
+        let temp2 = "";
 
         let heads = linhas[0].split(",");
 
@@ -698,31 +724,55 @@ let omnifilterfetchcsvdata = function (csvurl, el_id) {
 
         for (let i = 0; i < linhas.length; i++) {
           arr[i - 1] = {};
-          linhadados = linhas[i].split(",");
+          linhadados = linhas[i].split(/[,]{1}(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))/);
 
           for (let k = 0; k < linhadados.length; k++) {
+            linhadados[k].trim();
+
             if (
-              linhadados[k].substring(0, 1) == '"' &&
-              linhadados[k].substring(
-                linhadados[k].length - 1,
-                linhadados[k].length
-              ) == '"'
+              linhadados[k].substring(0, 1) == '"'
             ) {
-              temp1 = linhadados[k].substring(1, linhadados[k].length - 1);
+              temp1 = linhadados[k].substring(1, linhadados[k].length);
             } else {
               temp1 = linhadados[k];
             }
 
-            valorfinal = temp1.replace(/""/g, '"');
+            if (
+              linhadados[k].substring(0, 2) == '\"'
+            ) {
+              temp1 = linhadados[k].substring(2);
+            } else {
+              temp1 = linhadados[k];
+            }
+
+            if (
+              temp1.substring(
+                temp1.length - 2,
+                temp1.length
+              ) == '\"'
+            ) {
+              temp1 = temp1.substring(0, temp1.length - 2);
+            } 
+
+            if (
+              temp1.substring(
+                temp1.length - 1,
+                temp1.length
+              ) == '"'
+            ) {
+              temp2 = temp1.substring(0, temp1.length - 1);
+            } else {
+              temp2 = temp1;
+            }
+
+            valorfinal = temp2.replace(/""/g, '"');
 
             arr[i - 1][heads[k]] = valorfinal;
 
             console.log(i - 1 + ": " + heads[k] + " " + valorfinal);
           }
         }
-      
-      console.table(arr);
-      
+         
         startomnifilter(arr, el_id, omnifilter);
 
     });
