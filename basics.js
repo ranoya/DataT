@@ -227,7 +227,8 @@ const googlesheet = function (url, aba) {
  * 
  * Ex:
  * 
- * let mycsvdata = GoogleSheetCsvURL('https://docs.google.com/spreadsheets/d/1ih4V4CumuIl5ZynobsazNzGiaPrE2V2Dpt13FI22XNU/edit#gid=0')
+ * let mycsvdataurl = GoogleSheetCsvURL('https://docs.google.com/spreadsheets/d/1ih4V4CumuIl5ZynobsazNzGiaPrE2V2Dpt13FI22XNU/edit#gid=0')
+ * let data = getcsvdata(mycsvdataurl);
  * 
  */
 
