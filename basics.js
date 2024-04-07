@@ -681,7 +681,11 @@ let omnifilterfetchdata = function (arquivojson, el_id) {
 let omnifilterfetchcsvdata = function (csvurl, el_id) {
     
     // Fetch CSV file
-    fetch(csvurl).then(response => response.text()).then((dados) => {
+  fetch(csvurl).then(response => response.text()).then((dados) => {
+
+        console.log("rodou omnifilterfetchcsvdata");
+      
+        console.log(dados);
 
         let linhas = dados.split(/\r?\n|\r|\n/g);
         let linhadados = "";
