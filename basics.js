@@ -677,6 +677,50 @@ let omnifilterfetchdata = function (arquivojson, el_id) {
     });
 }
 
+
+let omnifilterfetchcsvdata = function (arquivojson, el_id) {
+    
+    // Fetch CSV file
+    fetch(csvurl).then(response => response.text()).then((dados) => {
+
+        let linhas = dados.split(/\r?\n|\r|\n/g);
+        let linhadados = "";
+        let valorfinal = "";
+        let temp1 = "";
+
+        let heads = linhas[0].split(",");
+
+        let arr = [];
+
+        for (let i = 0; i < linhas.length; i++) {
+          arr[i - 1] = {};
+          linhadados = linhas[i].split(",");
+
+          for (let k = 0; k < linhadados.length; k++) {
+            if (
+              linhadados[k].substring(0, 1) == '"' &&
+              linhadados[k].substring(
+                linhadados[k].length - 1,
+                linhadados[k].length
+              ) == '"'
+            ) {
+              temp1 = linhadados[k].substring(1, linhadados[k].length - 1);
+            } else {
+              temp1 = linhadados[k];
+            }
+
+            valorfinal = temp1.replace(/""/g, '"');
+
+            arr[i - 1][heads[k]] = valorfinal;
+          }
+        }
+      
+        startomnifilter(arr, el_id, omnifilter);
+
+    });
+
+}
+
 // Omnifilter Event Listener Function
 let startomnifilter = function (omnifdados, elemento, funcprocessa) {
     console.log("Omnifilter: fetch finished");
