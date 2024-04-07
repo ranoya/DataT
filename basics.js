@@ -32,6 +32,65 @@ const getdata = function (arquivojson, callback) {
 
 }
 
+
+
+/**
+ * Get CSV Data Function
+ * 
+ * Fetch CSV data and call a function to action over
+ * the new data
+ * 
+ * Ex:
+ * 
+ * function xpto(d) {
+ *    console.table(d);
+ * }
+ * 
+ * getcsvdata(myurl,xpto);
+ * 
+ */
+
+const getcsvdata = function (csvurl, callback) {
+
+  fetch(csvurl).then(response => response.text()).then((dados) => {
+
+        let linhas = dados.split(/\r?\n|\r|\n/g);
+        let linhadados = "";
+        let valorfinal = "";
+        let temp1 = "";
+
+        let heads = linhas[0].split(",");
+
+        let arr = [];
+
+        for (let i = 0; i < linhas.length; i++) {
+          arr[i - 1] = {};
+          linhadados = linhas[i].split(",");
+
+          for (let k = 0; k < linhadados.length; k++) {
+            if (
+              linhadados[k].substring(0, 1) == '"' &&
+              linhadados[k].substring(
+                linhadados[k].length - 1,
+                linhadados[k].length
+              ) == '"'
+            ) {
+              temp1 = linhadados[k].substring(1, linhadados[k].length - 1);
+            } else {
+              temp1 = linhadados[k];
+            }
+
+            valorfinal = temp1.replace(/""/g, '"');
+
+            arr[i - 1][heads[k]] = valorfinal;
+          }
+        }
+
+        callback(arr);
+    });
+  
+}
+
 /**
  * Get images from any kind of url
  * (under improvement) 
@@ -161,39 +220,7 @@ const GoogleSheetDataCSV = function(url) {
 }
 
 
-/**
- * 
- * CSV Parser
- * 
- * Return a JSON from a CSV String
- * 
- * let myjson = dtParseCsv(GoogleSheetData('https://docs.google.com/spreadsheets/d/1ih4V4CumuIl5ZynobsazNzGiaPrE2V2Dpt13FI22XNU/edit#gid=0'))
- * 
- */
 
-const dtParseCsv = function (str) {
-
-  const lines = str.split('\n');
-  const headers = lines[0].split(',');
-
-  const result = [];
-
-  for (let i = 1; i < lines.length; i++) {
-    const currentLine = lines[i].split(',');
-
-    if (currentLine.length === headers.length) {
-
-      const obj = {};
-      for (let j = 0; j < headers.length; j++) {
-        obj[headers[j]] = currentLine[j];
-      }
-
-      result.push(obj);
-    }
-  }
-
-  return result;
-}
 
 
 
