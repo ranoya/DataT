@@ -729,6 +729,8 @@ let omnifilterfetchcsvdata = function (csvurl, el_id) {
           for (let k = 0; k < linhadados.length; k++) {
             linhadados[k].trim();
 
+            console.log(i + " -> " + linhadados[k]);
+
             if (
               linhadados[k].substring(0, 1) == '"'
             ) {
@@ -737,22 +739,7 @@ let omnifilterfetchcsvdata = function (csvurl, el_id) {
               temp1 = linhadados[k];
             }
 
-            if (
-              linhadados[k].substring(0, 2) == '\"'
-            ) {
-              temp1 = linhadados[k].substring(2);
-            } else {
-              temp1 = linhadados[k];
-            }
-
-            if (
-              linhadados[k].substring(1, 2) == '"'
-            ) {
-              temp1 = linhadados[k].substring(2, linhadados[k].length);
-            } else {
-              temp1 = linhadados[k];
-            }
-
+            
             if (
               temp1.substring(
                 temp1.length - 2,
@@ -777,7 +764,8 @@ let omnifilterfetchcsvdata = function (csvurl, el_id) {
 
             arr[i - 1][heads[k]] = valorfinal;
 
-            console.log(i - 1 + ": " + heads[k] + " " + valorfinal);
+            console.log(i + ": " + heads[k] + " " + valorfinal);
+            console.log(valorfinal.substring(0, 1) + " ? " + (valorfinal.substring(0, 1) == '"'));
           }
         }
          
