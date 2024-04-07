@@ -54,17 +54,17 @@ const getcsvdata = function (csvurl, callback) {
 
   fetch(csvurl).then(response => response.text()).then((dados) => {
 
-        let total = omnifdados.length;
+        let total = dados.length;
         let changecsv = "";
         let quantquotes = 0;
         for (let r = 0; r < total; r++) {
-          if (omnifdados.substring(r, r+1) == '"') {
+          if (dados.substring(r, r+1) == '"') {
             quantquotes++;
           }
 
-          if (omnifdados.substring(r, r+1) == '\n' && quantquotes % 2 != 0) {
-            changecsv = omnifdados.substring(0, r) + ' ' + omnifdados.substring(r + 1);
-            omnifdados = changecsv;
+          if (dados.substring(r, r+1) == '\n' && quantquotes % 2 != 0) {
+            changecsv = dados.substring(0, r) + ' ' + dados.substring(r + 1);
+            dados = changecsv;
           }
 
         }
@@ -720,17 +720,17 @@ let omnifilterfetchcsvdata = function (csvurl, el_id) {
     // Fetch CSV file
   fetch(csvurl).then(response => response.text()).then((dados) => {
 
-        let total = omnifdados.length;
+        let total = dados.length;
         let changecsv = "";
         let quantquotes = 0;
         for (let r = 0; r < total; r++) {
-          if (omnifdados.substring(r, r+1) == '"') {
+          if (dados.substring(r, r+1) == '"') {
             quantquotes++;
           }
 
-          if (omnifdados.substring(r, r+1) == '\n' && quantquotes % 2 != 0) {
-            changecsv = omnifdados.substring(0, r) + ' ' + omnifdados.substring(r + 1);
-            omnifdados = changecsv;
+          if (dados.substring(r, r+1) == '\n' && quantquotes % 2 != 0) {
+            changecsv = dados.substring(0, r) + ' ' + dados.substring(r + 1);
+            dados = changecsv;
           }
 
         }
