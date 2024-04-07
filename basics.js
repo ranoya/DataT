@@ -223,17 +223,17 @@ const googlesheet = function (url, aba) {
  * Get a CSV from Google Sheet
  * 
  * 
- * Return a CSV file from the provided Google Sheet URL
+ * Return a CSV URL from the provided Google Sheet URL
  * 
  * Ex:
  * 
- * let mycsvdata = GoogleSheetData('https://docs.google.com/spreadsheets/d/1ih4V4CumuIl5ZynobsazNzGiaPrE2V2Dpt13FI22XNU/edit#gid=0')
+ * let mycsvdata = GoogleSheetCsvURL('https://docs.google.com/spreadsheets/d/1ih4V4CumuIl5ZynobsazNzGiaPrE2V2Dpt13FI22XNU/edit#gid=0')
  * 
  */
 
 
 
-const GoogleSheetDataCSV = function(url) {
+const GoogleSheetCsvURL = function(url) {
   url = new URL(url);
   const id = url.pathname.split("/")[3];
   const gid = new URLSearchParams(url.hash.slice(1)).get("gid") || 0;
