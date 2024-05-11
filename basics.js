@@ -127,6 +127,21 @@ const getcsvdata = function (csvurl, callback) {
   
 }
 
+
+/**
+ * shortcut
+ */
+
+const gsdata = function (url, funccallback) {
+
+  getcsvdata(GoogleSheetCsvURL(url), function (dados) {
+
+    funccallback(dados)
+
+  });
+  
+}
+
 /**
  * Get images from any kind of url
  * (under improvement) 
