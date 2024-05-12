@@ -31,11 +31,13 @@ The Observable version of Datat (the same library for use inside Observable) can
 <br>
 
 ## General Functions
+
 <br>
 
 ---
 
 <br>
+
 ### Fetch CSV function
 Get a csv from a URL
 ```js
@@ -92,6 +94,7 @@ getcsvdata(mycsvdataurl, doSomething);
 <br>
 
 ### Fetch JSON function
+
 Get a json from a URL
 ```js
 getdata(myurl, function(data) {
@@ -163,9 +166,11 @@ let photo = imagefromallsources('https://www.youtube.com/watch?v=ZbFATmGhz9k');
 <br>
 
 ### Re-scale
+
 Create a function that recalculates a value in a different scale
 
 `myfunction = rescale([originallimit_1, originallimit_2] , [convertedlimit_1, convertedlimit_2])`
+
 <br>
 
 Example:
@@ -183,6 +188,7 @@ let xpto = y(0.5); // = 60
 <br>
 
 ## Date functions
+
 <br>
 
 ---
@@ -190,6 +196,7 @@ let xpto = y(0.5); // = 60
 <br>
 
 ### dayadd
+
 Add days to a string date
 
 ```js
@@ -209,11 +216,13 @@ let newdate = dayadd(mystringdate, 7);
 <br>
 
 ### howmanydays
+
 How many days passed between two dates, including the last one
 
 ```js
 day = howmanydaysincluding(firstdate, seconddate);
 ```
+
 <br>
 Example:
 ```js
@@ -234,12 +243,14 @@ let dayspassed = howmanydaysincluding("11/04/2022", "15/04/2022");
 ---
 
 <br>
+
 ### Boolean Filter
 Create a list array from an old one when their elements have any value on a specific criteria(key)
 
 ```js
 xpto = bfilter(array, criteria)
 ```
+
 <br>
 Example:
 
@@ -251,10 +262,12 @@ Example:
 | Anne  | 40  | &nbsp; |
 
 <br>
+
 ```js
 let separate = bfilter(oldarray, "active");
 ```
 <br>
+
 separate=
 
 | name  | age | active |
@@ -276,12 +289,14 @@ let separate = oldarray.filter( (d) => typeof d[criteria] != "undefined" && d[cr
 ---
 
 <br>
+
 ### Conditional Filter
 Create a list array from an old one when a specific key have a match of a specific value/pattern
 
 ```js
 xpto = cfilter(array, key, pattern)
 ```
+
 <br>
 Example:
 
@@ -293,9 +308,11 @@ Example:
 | Anne  | 40  | &nbsp;   |
 
 <br>
+
 ```js
 let separate = cfilter(oldarray, "active", "(.*)is");
 ```
+
 <br>
 
 separate=
@@ -317,12 +334,14 @@ let separate = oldarray.filter( (d) => d[criteria].match(pattern) );
 ---
 
 <br>
+
 ### Sort by alphabetic order
 Sort an array in alphabetic order over the values for a specific key
 
 ```js
 newarray = alphabetic(oldarray, key);
 ```
+
 <br>
 Example:
 
@@ -334,9 +353,11 @@ Example:
 | Anne  | 40  | &nbsp;   |
 
 <br>
+
 ```js
 let list = alphabetic(oldarray, "name");
 ```
+
 <br>
 
 list = 
@@ -353,12 +374,14 @@ list =
 ---
 
 <br>
+
 ### Unique function
 List of unique values from a criteria (key) in the array
 
 ```js
 newarray = unique(oldarray, criteria);
 ```
+
 <br>
 Example:
 
@@ -370,9 +393,11 @@ Example:
 | Anne  | 40  | &nbsp;   |
 
 <br>
+
 ```js
 let list = unique(oldarray, "age");
 ```
+
 <br>
 
 list=
@@ -394,6 +419,7 @@ Sort an array using a list of possible values for a specific key
 ```js
 newarray = sortbylist(oldarray, keyvaluesarray, key);
 ```
+
 <br>
 Example:
 ```js
@@ -415,9 +441,11 @@ let disordered = [
 | strawberry | 5        | A    |
 
 <br>
-```js`
+
+```js
 let list = ['strawberry', 'apple'];
 ```
+
 <br>
 
 |            |
@@ -426,9 +454,11 @@ let list = ['strawberry', 'apple'];
 | apple      |
 
 <br>
+
 ```js
 let orders = sortbylist(disordered, list, 'fruit');
 ```
+
 <br>
 
 orders=
@@ -451,6 +481,7 @@ of the object
 ```js
 newarray = tags(array, key, separator);
 ```
+
 <br>
 Example:
 
@@ -463,9 +494,11 @@ Example:
 | Product 5 | A,E,C |
 
 <br>
+
 ```js
 let alltags = tags(myarray, "Type", ","); 
 ```
+
 <br>
 
 alltags=
@@ -482,12 +515,14 @@ alltags=
 ---
 
 <br>
+
 ### Shuffle function:
 Create a list of numbers without repetition, for random ordering itens of a list
 
 ```js
 neworderarray = shuffle(maxvalue, listsize);
 ```
+
 <br>
 Example:
 
@@ -500,9 +535,11 @@ Example:
 | 5   | Product E |
 
 <br>
+
 ```js
 let order = suffle(myarray.length, myarray.length); 
 ```
+
 <br>
 
 order =
@@ -520,6 +557,7 @@ order =
 ---
 
 <br>
+
 ### Select function:
 Create a filtered array using a function to filter data
 
@@ -532,6 +570,7 @@ newarray = select(oldarray, function (n, arr, patt) {
 
 }, patt);
 ```
+
 <br>
 *Shortcuts*<br>
 `selectp` for patterns<br>
@@ -550,9 +589,11 @@ Example using *patterncheck* (one of Select Predefined Tool):
 | John    | waiting       | 4        |
 
 <br>
+
 ```js
 let cancel = select(oldarray,patterncheck,/not(.*)/gi);
 ```
+
 <br>
 
 cancel=
@@ -578,15 +619,18 @@ Functions to pair with Select Function
 ---
 
 <br>
+
 ### patterncheck
 
 Uses regex for check
 <br><br>
 Example
+
 ```js
 let cancel = select(oldarray,patterncheck,/not(.*)/gi);
 let cancel = selectp(oldarray,/not(.*)/gi);
 ```
+
 <br><br>
 
 ---
@@ -599,10 +643,12 @@ Uses a string with words separated by space as query, adding every registry wher
 The words can be found in different keys 
 <br><br>
 Example
+
 ```js
 let cancel = select(oldarray,multipatterncheck_add,"not Anne 4");
 let cancel = selecta(oldarray,"not Anne 4");
 ```
+
 <br><br>
 
 ---
@@ -615,6 +661,7 @@ Uses a string with words separated by space as query, adding only registries whe
 The words can be found in different keys 
 <br><br>
 Example
+
 ```js
 let cancel = select(oldarray,multipatterncheck_exclude,"waiting 4");
 let cancel = selecte(oldarry,"waiting 4");
@@ -638,11 +685,13 @@ Out of the box solution for fuzzy search<Br>
 (This is an implementation of something like Observable's Inputs.search)
 
 For json files:
+
 ```js
 omnifilterfetchdata("https://www.myurl/file.json", "MyInputElement");
 ```
 
 For csv files:
+
 ```js
 omnifilterfetchcsvdata("https://www.myurl/file.csv", "MyInputElement");
 ```
@@ -689,6 +738,7 @@ Load the library direcly from the web:
 ```html
 <script src="https://datat.vercel.app/dommin.js"></script>
 ```
+
 Or download the file from [github](https://github.com/ranoya/DataT/blob/main/dommin.js).
 
 The reference and examples are also commented in the [source code](https://datat.vercel.app/dom.js).
@@ -713,8 +763,10 @@ $("p .classA .classB");
 $("div #myid").$("p")[2].$("a")
 $("div #myid").$$("p")[2].$$("a")[0]
 ```
+
 <br>
 Example:
+
 ```js
 let myelementA = $("#myid");
 let myelementB= $("div #myid");
@@ -728,6 +780,7 @@ let getelementsinside = $("p .classA .classB")[0].$("a");
 ---
 
 <br>
+
 ### Get Array of Element By Anything
 
 Return (always) an array of HTML elements (even if it's only one) in the confluence of one or many properties of the element (tag, id or class) and include `$` and `$$` functions in them for chaining.
