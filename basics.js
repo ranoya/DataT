@@ -340,6 +340,85 @@ const cfilter = function (arr, crit, regex) {
 };
 
 /**
+ * Sum Two Arrays
+ * Create a new array adding the contents of other two arrays
+ * sumarrayc fills the gaps with empty values (""), while sumarray leave them null
+ *
+ * Ex:
+ *
+ * total = sumarray(array_A,array_B);
+ * total_consolidated = sumarrayc(array_A,array_B);
+ *
+ */
+
+sumarray = function (arr1, arr2) {
+  let arr3 = [];
+  let c = 0;
+
+  for (let i = 0; i < arr1.length; i++) {
+    arr3[c] = arr1[i];
+    c++;
+  }
+
+  for (let k = 0; k < arr2.length; k++) {
+    arr3[c] = arr2[k];
+    c++;
+  }
+
+  return arr3;
+};
+
+sumarrayc = function (arr1, arr2) {
+  let arr3 = [];
+  let c = 0;
+
+  for (let i = 0; i < arr1.length; i++) {
+    arr3[c] = arr1[i];
+    c++;
+  }
+
+  for (let k = 0; k < arr2.length; k++) {
+    arr3[c] = arr2[k];
+    c++;
+  }
+
+  let kes = [];
+
+  for (let i = 0; i < arr3.length; i++) {
+    for (let k in arr3[i]) {
+      kes[k] = true;
+    }
+  }
+
+  let ks = [];
+  let ck = 0;
+
+  for (let n in kes) {
+    ks[ck] = n;
+    ck++;
+  }
+
+  let arr4 = [];
+
+  for (let n = 0; n < arr3.length; n++) {
+    arr4[n] = {};
+    for (let s = 0; s < ks.length; s++) {
+      if (
+        typeof arr3[n][ks[s]] == `undefined` ||
+        arr3[n][ks[s]] == null ||
+        arr3[n][ks[s]] == ""
+      ) {
+        arr4[n][ks[s]] = "";
+      } else {
+        arr4[n][ks[s]] = arr3[n][ks[s]];
+      }
+    }
+  }
+
+  return arr4;
+};
+
+/**
  * Unique Function
  * Create a list array from unique values stored in a specific array field
  *
