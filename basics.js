@@ -235,6 +235,117 @@ const imagefromallsources = function (kurl) {
 
 /**
  *
+ * Create tables with images
+ *
+ * Example:
+ * let allimages = datatable(arr, "images_url", { columns: 6, proportion: "4/3"});
+ *
+ */
+
+imagetable = function (data, column, options) {
+  let code = "";
+
+  let colnum = 4;
+  let imgsize = "cover";
+  let aspect = "1/1";
+  let start = 0;
+  let stop = data.length;
+
+  if (typeof options != "undefined" && options != null && options != "") {
+    if (
+      typeof options.columns != "undefined" &&
+      options.columns != null &&
+      options.columns != ""
+    ) {
+      colnum = options.columns;
+    }
+
+    if (
+      typeof options.type != "undefined" &&
+      options.type != null &&
+      options.type != ""
+    ) {
+      imgsize = options.type;
+    }
+
+    if (
+      typeof options.proportion != "undefined" &&
+      options.proportion != null &&
+      options.proportion != ""
+    ) {
+      aspect = options.proportion;
+    }
+
+    if (
+      typeof options.index != "undefined" &&
+      options.index != null &&
+      options.index != ""
+    ) {
+      start = options.index;
+    }
+
+    if (start > data.length) {
+      start = data.length;
+    }
+
+    if (
+      typeof options.size != "undefined" &&
+      options.size != null &&
+      options.size != ""
+    ) {
+      stop = start + options.size;
+    }
+
+    if (stop >= data.length) {
+      stop = data.length;
+    }
+  }
+
+  let grd = "";
+  for (let k = 0; k < colnum; k++) {
+    grd += " 1fr";
+  }
+
+  code += `
+   <style>
+          .datat_elemtyp05 {
+             display: grid;
+             gap: 16px 16px;
+             width: 100%;
+          }
+
+          .datat_elemtyp05 div {
+             background-position: top center;
+          }
+
+          .datat_elemtyp05 div:hover {
+             cursor: pointer;
+          }
+
+          @media screen and (max-width: 720px) {
+             .datat_elemtyp05 {
+                  grid-template-columns: 1fr !important;
+            }
+          }
+   </style>
+
+   <div class="datat_elemtyp05 datat_imagetable" style='grid-template-columns:${grd};'>`;
+
+  for (let i = start; i < stop; i++) {
+    code += `<div class="datat_imagetable_images" onclick='window.open("${imagefromallsources(
+      data[i][column]
+    )}")' style='background-repeat: no-repeat; background-size: ${imgsize}; aspect-ratio: ${aspect}; background-image: url("${imagefromallsources(
+      data[i][column]
+    )}");'></div>`;
+  }
+
+  code += `</div>`;
+
+  return html`${code}`;
+};
+
+/**
+ *
  * Get a JSON from a Google Sheet using opensheet.elk.sh
  *
  * Example:
