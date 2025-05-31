@@ -462,7 +462,7 @@ const cfilter = function (arr, crit, regex) {
  *
  */
 
-sumarray = function (arr1, arr2) {
+const sumarray = function (arr1, arr2) {
   let arr3 = [];
   let c = 0;
 
@@ -479,7 +479,7 @@ sumarray = function (arr1, arr2) {
   return arr3;
 };
 
-sumarrayc = function (arr1, arr2) {
+const sumarrayc = function (arr1, arr2) {
   let arr3 = [];
   let c = 0;
 
@@ -527,6 +527,38 @@ sumarrayc = function (arr1, arr2) {
   }
 
   return arr4;
+};
+
+/**
+ * Array Subtract
+ * Subtract the data present in one array if it exists in another array
+ *
+ * Ex:
+ *
+ * notconfirmedyet = aSubtract(allnames, confirmednames);
+ *
+ */
+
+const aSubtract = function (arr1, arr2) {
+  var array = [];
+  var c = 0;
+
+  for (let i1 = 0; i1 < arr1.length; i1++) {
+    let temp = false;
+
+    for (let i2 = 0; i2 < arr2.length; i2++) {
+      if (arr1[i1] == arr2[i2]) {
+        temp = true;
+      }
+    }
+
+    if (temp == false) {
+      array[c] = arr1[i1];
+      c++;
+    }
+  }
+
+  return array;
 };
 
 /**
