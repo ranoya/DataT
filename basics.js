@@ -398,6 +398,56 @@ const rescale = function ([a, b], [c, d]) {
 };
 
 /**
+ * Between Filter
+ * Create a list array from an old one when the values in
+ * the specified column are between the the limits of the query
+ *
+ * Ex:
+ *
+ * let best = btwfilter(oldarray, "ranking", "> 9.5");
+ * let eighties = btwfilter(oldarray, "year", "1980 > 1989");
+ *
+ */
+
+const btwfilter = function (arr, col, fi) {
+  let di = -1 * Number.MAX_VALUE;
+  let df = Number.MAX_VALUE;
+
+  let opera = "";
+
+  if (
+    fi.match(
+      /\-{0,1}\d{1,20}\.{0,1}\d{0,20}.{0,2}\>.{0,2}\-{0,1}\d{1,20}\.{0,1}\d{0,20}/gi
+    )
+  ) {
+    opera = fi.match(/\-{0,1}\d{1,20}\.{0,1}\d{0,20}/gi);
+    di = opera[0];
+    df = opera[1];
+  } else if (fi.match(/\-{0,1}\d{1,20}\.{0,1}\d{0,20}.{0,2}\>/gi)) {
+    opera = fi.match(/\-{0,1}\d{1,20}\.{0,1}\d{0,20}/gi);
+    di = opera[0];
+  } else if (fi.match(/\>.{0,2}\-{0,1}\d{1,20}\.{0,1}\d{0,20}/gi)) {
+    opera = fi.match(/\-{0,1}\d{1,20}\.{0,1}\d{0,20}/gi);
+    df = opera[0];
+  }
+
+  let newarr = [];
+  let c = 0;
+
+  for (let i = 0; i < arr.length; i++) {
+    if (
+      parseFloat(arr[i][col]) >= parseFloat(di) &&
+      parseFloat(arr[i][col]) <= parseFloat(df)
+    ) {
+      newarr[c] = arr[i];
+      c++;
+    }
+  }
+
+  return newarr;
+};
+
+/**
  * Boolean Filter
  * Create a list array from an old one when their elements have any value on a specific criteria(key)
  *
