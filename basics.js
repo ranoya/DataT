@@ -404,8 +404,9 @@ const rescale = function ([a, b], [c, d]) {
  *
  * Ex:
  *
- * let best = btwfilter(oldarray, "ranking", "> 9.5");
+ * let best = btwfilter(oldarray, "ranking", "9.5 >");
  * let eighties = btwfilter(oldarray, "year", "1980 > 1989");
+ * let older = btwfilter(oldarray, "year", "> 1970");
  *
  */
 
