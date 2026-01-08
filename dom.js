@@ -86,6 +86,25 @@ let domSwap = function (obj1, obj2) {
 };
 
 /*
+
+    Move DOM Elements
+
+    Move first element to the position below the second element
+
+    Example:
+    domMoveTo( $("#myid"), $("#myid2") );
+
+*/
+
+let domMoveTo = function (obj1, obj2) {
+  var temp = document.createElement("div");
+  obj1.parentNode.insertBefore(temp, obj1);
+  obj2.parentNode.insertBefore(obj1, obj2);
+  temp.parentNode.removeChild(temp);
+  domSwap(obj1, obj2);
+};
+
+/*
    
    Create new DOM Element(s) and return
    a array of created elements or a single element
