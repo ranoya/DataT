@@ -697,7 +697,21 @@ const sortbylist = function (arr, list, crit) {
 
 const alphabetic = function (arr, crit) {
   let listuniques = unique(arr, crit);
-  listuniques.sort();
+
+  let allnumbers = true;
+  for (let i = 0; i < arr.length; i++) {
+    if (!Number.isFinite(arr[i][crit])) {
+      allnumbers = false;
+    }
+  }
+
+  if (allnumbers) {
+    listuniques.sort(function (a, b) {
+      return a - b;
+    });
+  } else {
+    listuniques.sort();
+  }
 
   let newarr = sortbylist(arr, listuniques, crit);
 
