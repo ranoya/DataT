@@ -1087,3 +1087,563 @@ let startomnifilter = function (omnifdados, elemento, funcprocessa) {
   let newomniarray = select(omnifdados, multipatterncheck_exclude, "");
   funcprocessa(newomniarray);
 };
+
+
+function sqlquery(data, selectstring) {
+  if (!Array.isArray(data)) {
+    throw new TypeError("data deve ser uma array.");
+  }
+
+  if (typeof selectstring !== "string") {
+    throw new TypeError("selectstring deve ser uma string.");
+  }
+
+  if (!data.length) return [];
+
+  const columns = Object.keys(data[0] ?? {});
+  const hasColumn = name => columns.includes(name);
+
+  // --------------------------------------------------
+  // 1. TOKENIZER
+  // --------------------------------------------------
+
+  function tokenize(sql) {
+    const tokens = [];
+    let i = 0;
+
+    while (i < sql.length) {
+      if (/\s/.test(sql[i])) {
+        i++;
+        continue;
+      }
+
+      // Strings e identificadores entre aspas
+      if (sql[i] === "'" || sql[i] === '"') {
+        const quote = sql[i++];
+        let value = "";
+
+        while (i < sql.length) {
+          if (sql[i] === quote) {
+            if (sql[i + 1] === quote) {
+              value += quote;
+              i += 2;
+              continue;
+            }
+
+            i++;
+            break;
+          }
+
+          if (sql[i] === "\\" && i + 1 < sql.length) {
+            i++;
+          }
+
+          value += sql[i++];
+        }
+
+        tokens.push({ type: "quoted", value });
+        continue;
+      }
+
+      // Operadores de comparação
+      const op = sql.slice(i).match(/^(>=|<=|<>|!=|=|>|<)/);
+
+      if (op) {
+        tokens.push({ type: "op", value: op[0] });
+        i += op[0].length;
+        continue;
+      }
+
+      // Pontuação
+      if ("(),.*".includes(sql[i])) {
+        tokens.push({ type: "punct", value: sql[i++] });
+        continue;
+      }
+
+      // Números
+      const num = sql.slice(i).match(
+        /^-?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?/i
+      );
+
+      if (num) {
+        tokens.push({
+          type: "number",
+          value: Number(num[0])
+        });
+        i += num[0].length;
+        continue;
+      }
+
+      // Identificadores e palavras-chave
+      const word = sql.slice(i).match(/^[\w$À-ÿ-]+/);
+
+      if (word) {
+        tokens.push({ type: "word", value: word[0] });
+        i += word[0].length;
+        continue;
+      }
+
+      throw new SyntaxError(
+        `Caractere inesperado na consulta: "${sql[i]}"`
+      );
+    }
+
+    return tokens;
+  }
+
+  // --------------------------------------------------
+  // 2. PARSER E UTILITÁRIOS
+  // --------------------------------------------------
+
+  const tokens = tokenize(selectstring);
+  let pos = 0;
+
+  const peek = () => tokens[pos];
+  const next = () => tokens[pos++];
+
+  const isWord = (word, offset = 0) =>
+    tokens[pos + offset]?.type === "word" &&
+    tokens[pos + offset].value.toUpperCase() === word;
+
+  function expectWord(word) {
+    if (!isWord(word)) {
+      throw new SyntaxError(`Esperado: ${word}`);
+    }
+    next();
+  }
+
+  function expectPunct(value) {
+    if (peek()?.value !== value) {
+      throw new SyntaxError(`Esperado: ${value}`);
+    }
+    next();
+  }
+
+  function readName() {
+    const t = next();
+
+    if (!t || !["word", "quoted"].includes(t.type)) {
+      throw new SyntaxError("Nome de coluna esperado.");
+    }
+
+    return t.value;
+  }
+
+  function readIdentifier() {
+    const name = readName();
+
+    if (!hasColumn(name)) {
+      throw new Error(`Coluna inexistente: "${name}"`);
+    }
+
+    return name;
+  }
+
+  function readValue() {
+    const t = next();
+
+    if (!t) {
+      throw new SyntaxError("Valor esperado.");
+    }
+
+    if (t.type === "number") return t.value;
+
+    if (t.type === "quoted") return t.value;
+
+    if (t.type === "word") {
+      const upper = t.value.toUpperCase();
+
+      if (upper === "NULL") return null;
+      if (upper === "TRUE") return true;
+      if (upper === "FALSE") return false;
+
+      // Permite usar outra coluna como valor.
+      if (hasColumn(t.value)) {
+        return { column: t.value };
+      }
+
+      throw new SyntaxError(
+        `Valor ou coluna desconhecida: "${t.value}". ` +
+        "Use aspas para strings."
+      );
+    }
+
+    throw new SyntaxError("Valor inválido.");
+  }
+
+  function resolve(value, row) {
+    return value && typeof value === "object" &&
+      Object.hasOwn(value, "column")
+      ? row[value.column]
+      : value;
+  }
+
+  function compare(a, b) {
+    if (a == null || b == null) {
+      return a == null && b == null ? 0 :
+        a == null ? -1 : 1;
+    }
+
+    if (typeof a === "number" && typeof b === "number") {
+      return a - b;
+    }
+
+    return String(a).localeCompare(String(b), undefined, {
+      numeric: true,
+      sensitivity: "base"
+    });
+  }
+
+  // --------------------------------------------------
+  // 3. SELECT
+  // --------------------------------------------------
+
+  expectWord("SELECT");
+
+  const distinct = isWord("DISTINCT");
+
+  if (distinct) next();
+
+  const selectColumns = [];
+
+  if (peek()?.value === "*") {
+    next();
+
+    selectColumns.push(
+      ...columns.map(name => ({ name, alias: name }))
+    );
+  } else {
+    while (true) {
+      const name = readIdentifier();
+      let alias = name;
+
+      if (isWord("AS")) {
+        next();
+        alias = readName();
+      }
+
+      selectColumns.push({ name, alias });
+
+      if (peek()?.value !== ",") break;
+      next();
+    }
+  }
+
+  // --------------------------------------------------
+  // 4. FROM OPCIONAL
+  // --------------------------------------------------
+
+  if (isWord("FROM")) {
+    next();
+
+    // Ignora o nome da fonte até a próxima cláusula.
+    if (!peek()) {
+      throw new SyntaxError("Nome esperado após FROM.");
+    }
+
+    while (
+      peek() &&
+      !["WHERE", "ORDER", "LIMIT", "OFFSET"].some(isWord)
+    ) {
+      next();
+    }
+  }
+
+  // --------------------------------------------------
+  // 5. EXPRESSÕES WHERE
+  // --------------------------------------------------
+
+  function parsePrimary() {
+    if (peek()?.value === "(") {
+      next();
+      const expr = parseOr();
+      expectPunct(")");
+      return expr;
+    }
+
+    if (isWord("NOT")) {
+      next();
+      const expr = parsePrimary();
+      return row => !expr(row);
+    }
+
+    const column = readIdentifier();
+
+    // IS NULL / IS NOT NULL
+    if (isWord("IS")) {
+      next();
+      const not = isWord("NOT");
+
+      if (not) next();
+
+      expectWord("NULL");
+
+      return row => not
+        ? row[column] != null
+        : row[column] == null;
+    }
+
+    // [NOT] IN (...) / [NOT] LIKE
+    let negated = false;
+
+    if (isWord("NOT")) {
+      next();
+      negated = true;
+    }
+
+    if (isWord("IN")) {
+      next();
+      expectPunct("(");
+
+      const values = [];
+
+      while (true) {
+        values.push(readValue());
+
+        if (peek()?.value !== ",") break;
+        next();
+      }
+
+      expectPunct(")");
+
+      return row => {
+        const result = values.some(value =>
+          compare(row[column], resolve(value, row)) === 0
+        );
+
+        return negated ? !result : result;
+      };
+    }
+
+    if (isWord("LIKE")) {
+      next();
+      const pattern = readValue();
+
+      return row => {
+        const value = row[column];
+        const p = resolve(pattern, row);
+
+        if (value == null || p == null) return false;
+
+        // Escapa os caracteres especiais de regex.
+        const escaped = String(p).replace(
+          /[.*+?^${}()|[\]\\]/g,
+          "\\$&"
+        );
+
+        const regex = new RegExp(
+          "^" + escaped
+            .replace(/%/g, "[\\s\\S]*")
+            .replace(/_/g, "[\\s\\S]") + "$",
+          "i"
+        );
+
+        const result = regex.test(String(value));
+        return negated ? !result : result;
+      };
+    }
+
+    if (negated) {
+      throw new SyntaxError("NOT deve preceder IN ou LIKE.");
+    }
+
+    // Comparações
+    const operator = next();
+
+    if (!operator || operator.type !== "op") {
+      throw new SyntaxError(
+        `Operador de comparação esperado após "${column}".`
+      );
+    }
+
+    const value = readValue();
+
+    return row => {
+      const a = row[column];
+      const b = resolve(value, row);
+
+      if (a == null || b == null) {
+        if (operator.value === "=") return a == null && b == null;
+        if (["!=", "<>"].includes(operator.value)) {
+          return !(a == null && b == null);
+        }
+        return false;
+      }
+
+      const c = compare(a, b);
+
+      switch (operator.value) {
+        case "=":  return c === 0;
+        case "!=":
+        case "<>": return c !== 0;
+        case ">":  return c > 0;
+        case ">=": return c >= 0;
+        case "<":  return c < 0;
+        case "<=": return c <= 0;
+        default:
+          throw new SyntaxError("Operador não suportado.");
+      }
+    };
+  }
+
+  function parseAnd() {
+    let left = parsePrimary();
+
+    while (isWord("AND")) {
+      next();
+      const right = parsePrimary();
+      const previous = left;
+
+      left = row => previous(row) && right(row);
+    }
+
+    return left;
+  }
+
+  function parseOr() {
+    let left = parseAnd();
+
+    while (isWord("OR")) {
+      next();
+      const right = parseAnd();
+      const previous = left;
+
+      left = row => previous(row) || right(row);
+    }
+
+    return left;
+  }
+
+  let predicate = () => true;
+
+  if (isWord("WHERE")) {
+    next();
+    predicate = parseOr();
+  }
+
+  // --------------------------------------------------
+  // 6. ORDER BY
+  // --------------------------------------------------
+
+  const orderColumns = [];
+
+  if (isWord("ORDER")) {
+    next();
+    expectWord("BY");
+
+    while (true) {
+      const name = readName();
+
+      // Permite ordenar por coluna original ou alias.
+      const selected = selectColumns.find(
+        c => c.alias === name || c.name === name
+      );
+
+      if (!hasColumn(name) && !selected) {
+        throw new Error(`Coluna de ordenação inexistente: "${name}"`);
+      }
+
+      let direction = 1;
+
+      if (isWord("ASC")) {
+        next();
+      } else if (isWord("DESC")) {
+        next();
+        direction = -1;
+      }
+
+      orderColumns.push({ name, direction });
+
+      if (peek()?.value !== ",") break;
+      next();
+    }
+  }
+
+  // --------------------------------------------------
+  // 7. LIMIT E OFFSET
+  // --------------------------------------------------
+
+  let limit = Infinity;
+  let offset = 0;
+
+  if (isWord("LIMIT")) {
+    next();
+    const t = next();
+
+    if (t?.type !== "number" ||
+        !Number.isInteger(t.value) || t.value < 0) {
+      throw new SyntaxError("LIMIT deve ser inteiro não negativo.");
+    }
+
+    limit = t.value;
+  }
+
+  if (isWord("OFFSET")) {
+    next();
+    const t = next();
+
+    if (t?.type !== "number" ||
+        !Number.isInteger(t.value) || t.value < 0) {
+      throw new SyntaxError("OFFSET deve ser inteiro não negativo.");
+    }
+
+    offset = t.value;
+  }
+
+  if (peek()) {
+    throw new SyntaxError(
+      `Trecho não reconhecido próximo de "${peek().value}".`
+    );
+  }
+
+  // --------------------------------------------------
+  // 8. EXECUÇÃO
+  // --------------------------------------------------
+
+  let result = data.filter(predicate);
+
+  if (orderColumns.length) {
+    result.sort((a, b) => {
+      for (const { name, direction } of orderColumns) {
+        const column = selectColumns.find(
+          c => c.alias === name || c.name === name
+        );
+
+        const key = column ? column.name : name;
+        const comparison = compare(a[key], b[key]);
+
+        if (comparison !== 0) return comparison * direction;
+      }
+
+      return 0;
+    });
+  }
+
+  result = result
+    .slice(offset, Number.isFinite(limit) ? offset + limit : undefined)
+    .map(row => {
+      const output = {};
+
+      for (const { name, alias } of selectColumns) {
+        output[alias] = row[name];
+      }
+
+      return output;
+    });
+
+  if (distinct) {
+    const seen = new Set();
+
+    result = result.filter(row => {
+      const key = JSON.stringify(row);
+
+      if (seen.has(key)) return false;
+
+      seen.add(key);
+      return true;
+    });
+  }
+
+  return result;
+}
+
