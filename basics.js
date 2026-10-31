@@ -22,13 +22,20 @@
  *
  */
 
+async function getdata(arquivojson, callback) { 
+ let response = await fetch(arquivojson); 
+ let data = await response.json(); 
+ await callback(data);
+}
+
+/*
 const getdata = function (arquivojson, callback) {
   fetch(arquivojson)
     .then((response) => response.json())
     .then((dados) => {
       callback(dados);
     });
-};
+}; */
 
 /**
  * Get CSV Data Function
