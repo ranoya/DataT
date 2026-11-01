@@ -1660,7 +1660,7 @@ function sqlquery(data, selectstring) {
 
 /**
  * 
- * Make a html table with JSON tabular data
+ * Make a html table with an array
  * 
  * Ex:
  * 
