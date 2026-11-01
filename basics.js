@@ -22,20 +22,14 @@
  *
  */
 
-async function getdata(arquivojson, callback) { 
- let response = await fetch(arquivojson); 
- let data = await response.json(); 
- await callback(data);
-}
 
-/*
 const getdata = function (arquivojson, callback) {
   fetch(arquivojson)
     .then((response) => response.json())
     .then((dados) => {
       callback(dados);
     });
-}; */
+}; 
 
 /**
  * Get CSV Data Function
@@ -1096,6 +1090,16 @@ let startomnifilter = function (omnifdados, elemento, funcprocessa) {
 };
 
 
+/**
+ * SQL Query
+ * Use SQL Query sintax to query JSON data
+ *
+ * Ex:
+ *
+ * newarray = sqlquery(mydata, "SELECT * WHERE year < 2000 ORDER BY name ASC");
+ *
+ */
+
 function sqlquery(data, selectstring) {
   if (!Array.isArray(data)) {
     throw new TypeError("data deve ser uma array.");
@@ -1654,3 +1658,162 @@ function sqlquery(data, selectstring) {
   return result;
 }
 
+/**
+ * 
+ * Make a html table with JSON tabular data
+ * 
+ * Ex:
+ * 
+ * showtable(mydata, { color: "black",
+ *                     backgroundColor: "white",
+ *                     link: "url",
+ *                     element: "mydiv",
+ *                     headings: { "col 1": "col 1 field Heading",
+ *                                 "col 2": "col 2 field Heading",
+ *                                 "col 3": "col 3 field Heading" 
+ *                               }
+ *                    });
+ * 
+ */
+
+const showtable = function (data, param) {
+  let troca = "";
+
+  if (
+    typeof param.headings != "undefined" &&
+    param.headings != null &&
+    param.headings != ""
+  ) {
+    troca = function (heading) {
+      let nome = heading;
+      for (let k in param.headings) {
+        if (heading == k) {
+          nome = param.headings[k];
+          break;
+        }
+      }
+
+      return nome;
+    };
+  }
+
+  let campolink = "";
+  let totaldeitens = Object.keys(data[0]).length;
+
+  if (
+    typeof param.link != "undefined" &&
+    param.link != null &&
+    param.link != "" &&
+    typeof data[0][param.link] != "undefined"
+  ) {
+    campolink = param.link;
+    totaldeitens--;
+  }
+
+  let colunas = "";
+  for (let i = 0; i < totaldeitens; i++) {
+    colunas += "1fr ";
+  }
+
+  let invertcolor = "color: white; background-color: blue;";
+  let cores = "";
+  let borda = "border-top: 1px solid blue; border-left: 1px solid blue;";
+  let bordacell =
+    "border-bottom: 1px solid blue; border-right: 1px solid blue;";
+  let linha = `background-color: blue;`;
+  if (
+    typeof param.color != "undefined" &&
+    param.color != null &&
+    param.color != ""
+  ) {
+    cores += `color: ${param.color};`;
+    invertcolor += `background-color: ${param.color} !important;`;
+    borda += `border-top: 1px solid ${param.color} !important; border-left: 1px solid ${param.color} !important;`;
+    bordacell += `border-bottom: 1px solid ${param.color} !important; border-right: 1px solid ${param.color} !important;`;
+    linha = `background-color: ${param.color};`;
+  }
+  if (
+    typeof param.backgroundColor != "undefined" &&
+    param.backgroundColor != null &&
+    param.backgroundColor != ""
+  ) {
+    cores += `background-color: ${param.backgroundColor};`;
+    invertcolor += `color: ${param.backgroundColor} !important;`;
+  }
+
+  let code = "";
+
+  if (campolink != "") {
+    code += `<style>
+            .maketablegrid a { ${cores} }
+            .maketablegrid a:hover { ${invertcolor}; text-decoration: none; }
+            </style>
+            <div class="maketablegrid" style="display: flex; flex-direction: column; ${borda}">
+
+            <div class="maketablegrid" style="display: grid; grid-template-columns: [init] ${colunas} [fim];">
+            `;
+
+    for (let k = 0; k < Object.keys(data[0]).length; k++) {
+      if (campolink != Object.keys(data[0])[k]) {
+        code += `<div class="maketablegridheadings" style="padding: 4px 8px 4px 8px; ${invertcolor} ${bordacell}">${troca(
+          Object.keys(data[0])[k]
+        )}</div>
+        
+        `;
+      }
+    }
+
+    code += `</div>`;
+
+    for (let i = 0; i < data.length; i++) {
+      code += `<a href="${data[i][campolink]}" class="maketablegrid" style="display: grid; grid-template-columns: [init] ${colunas} [fim];">`;
+      for (let k = 0; k < Object.keys(data[0]).length; k++) {
+        if (campolink != Object.keys(data[0])[k]) {
+          code += `<div class="maketableitem" style="padding: 4px 8px 4px 8px; ${bordacell}">${
+            data[i][Object.keys(data[0])[k]]
+          }</div>`;
+        }
+      }
+
+      code += `</a>`;
+    }
+  } else {
+    code = `<div class="maketablegrid" style="display: grid; grid-template-columns: [init] ${colunas} [fim]; ${borda}">`;
+
+    for (let k = 0; k < totaldeitens; k++) {
+      if (campolink != "" && campolink != Object.keys(data[0])[k]) {
+        code += `<div class="maketablegridheadings" style="padding: 4px 8px 4px 8px; ${invertcolor} ${bordacell}">${troca(
+          Object.keys(data[0])[k]
+        )}</div>
+        
+        `;
+      } else {
+        code += `<div class="maketablegridheadings" style="padding: 4px 8px 4px 8px; ${invertcolor} ${bordacell}">${troca(
+          Object.keys(data[0])[k]
+        )}</div>
+        
+        `;
+      }
+    }
+
+    for (let i = 0; i < data.length; i++) {
+      for (let k = 0; k < totaldeitens; k++) {
+        code += `<div class="maketableitem" style="padding: 4px 8px 4px 8px; ${bordacell} ${cores}">${
+          data[i][Object.keys(data[0])[k]]
+        }</div>`;
+      }
+    }
+  }
+
+  code += `</div>`;
+
+  if (
+    typeof param.element != "undefined" &&
+    param.element != null &&
+    param.element != ""
+  ) {
+    document.querySelector(param.element).innerHTML = code;
+  } else {
+    return code;
+  }
+}
