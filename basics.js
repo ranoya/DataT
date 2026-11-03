@@ -1693,7 +1693,7 @@ const showtable = function (data, param) {
   let campolink = "";
   let totaldeitens = Object.keys(data[0]).length;
   let lista = false;
-  if (totaldeitens == 0) {
+  if (totaldeitens == 0 || typeof data[0] != "object") {
     lista = true;
   }
 
