@@ -1692,8 +1692,12 @@ const showtable = function (data, param) {
 
   let campolink = "";
   let totaldeitens = Object.keys(data[0]).length;
+  let lista = false;
+  if (totaldeitens == 0) {
+    lista = true;
+  }
 
-  if (
+  if (typeof param != "undefined" && param != null && param != "" && 
     typeof param.link != "undefined" &&
     param.link != null &&
     param.link != "" &&
@@ -1714,7 +1718,7 @@ const showtable = function (data, param) {
   let bordacell =
     "border-bottom: 1px solid blue; border-right: 1px solid blue;";
   let linha = `background-color: blue;`;
-  if (
+  if (typeof param != "undefined" && param != null && param != "" &&
     typeof param.color != "undefined" &&
     param.color != null &&
     param.color != ""
@@ -1725,7 +1729,7 @@ const showtable = function (data, param) {
     bordacell += `border-bottom: 1px solid ${param.color} !important; border-right: 1px solid ${param.color} !important;`;
     linha = `background-color: ${param.color};`;
   }
-  if (
+  if (typeof param != "undefined" && param != null && param != "" &&
     typeof param.backgroundColor != "undefined" &&
     param.backgroundColor != null &&
     param.backgroundColor != ""
@@ -1736,7 +1740,7 @@ const showtable = function (data, param) {
 
   let code = "";
 
-  if (campolink != "") {
+  if (campolink != "" && !lista) {
     code += `<style>
             .maketablegrid a { ${cores} }
             .maketablegrid a:hover { ${invertcolor}; text-decoration: none; }
@@ -1762,15 +1766,17 @@ const showtable = function (data, param) {
       code += `<a href="${data[i][campolink]}" class="maketablegrid" style="display: grid; grid-template-columns: [init] ${colunas} [fim];">`;
       for (let k = 0; k < Object.keys(data[0]).length; k++) {
         if (campolink != Object.keys(data[0])[k]) {
-          code += `<div class="maketableitem" style="padding: 4px 8px 4px 8px; ${bordacell}">${
-            data[i][Object.keys(data[0])[k]]
-          }</div>`;
+          code += `<div class="maketableitem" style="padding: 4px 8px 4px 8px; ${bordacell}">${data[i][Object.keys(data[0])[k]]
+            }</div>`;
         }
       }
 
       code += `</a>`;
     }
   } else {
+
+    if (!lista) {
+
     code = `<div class="maketablegrid" style="display: grid; grid-template-columns: [init] ${colunas} [fim]; ${borda}">`;
 
     for (let k = 0; k < totaldeitens; k++) {
@@ -1791,16 +1797,22 @@ const showtable = function (data, param) {
 
     for (let i = 0; i < data.length; i++) {
       for (let k = 0; k < totaldeitens; k++) {
-        code += `<div class="maketableitem" style="padding: 4px 8px 4px 8px; ${bordacell} ${cores}">${
-          data[i][Object.keys(data[0])[k]]
-        }</div>`;
+        code += `<div class="maketableitem" style="padding: 4px 8px 4px 8px; ${bordacell} ${cores}">${data[i][Object.keys(data[0])[k]]
+          }</div>`;
+      }
+    }
+    } else {
+      // Lista
+      code = `<div class="maketablegrid" style="display: grid; grid-template-columns: [init] 1fr [fim]; ${borda}">`;
+      for (let i = 0; i < data.length; i++) {
+        code += `<div class="maketableitem" style="padding: 4px 8px 4px 8px; ${bordacell} ${cores}">${data[i]}</div>`;
       }
     }
   }
 
   code += `</div>`;
 
-  if (
+  if (typeof param != "undefined" && param != null && param != "" &&
     typeof param.element != "undefined" &&
     param.element != null &&
     param.element != ""
