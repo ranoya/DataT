@@ -1676,15 +1676,7 @@ function sqlquery(data, selectstring) {
  * 
  */
 
-const showtable = function (data, param) {
-  let troca = "";
-
-  if (
-    typeof param.headings != "undefined" &&
-    param.headings != null &&
-    param.headings != ""
-  ) {
-    troca = function (heading) {
+let troca = function (heading) {
       let nome = heading;
       for (let k in param.headings) {
         if (heading == k) {
@@ -1694,8 +1686,9 @@ const showtable = function (data, param) {
       }
 
       return nome;
-    };
-  }
+}
+
+const showtable = function (data, param) {
 
   let campolink = "";
   let totaldeitens = Object.keys(data[0]).length;
