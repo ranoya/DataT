@@ -1676,7 +1676,7 @@ function sqlquery(data, selectstring) {
  * 
  */
 
-let troca = function (heading) {
+let dtsttroca = function (heading, param) {
       let nome = heading;
       for (let k in param.headings) {
         if (heading == k) {
@@ -1748,8 +1748,8 @@ const showtable = function (data, param) {
 
     for (let k = 0; k < Object.keys(data[0]).length; k++) {
       if (campolink != Object.keys(data[0])[k]) {
-        code += `<div class="maketablegridheadings" style="padding: 4px 8px 4px 8px; ${invertcolor} ${bordacell}">${troca(
-          Object.keys(data[0])[k]
+        code += `<div class="maketablegridheadings" style="padding: 4px 8px 4px 8px; ${invertcolor} ${bordacell}">${dtsttroca(
+          Object.keys(data[0])[k], param
         )}</div>
         
         `;
@@ -1775,14 +1775,14 @@ const showtable = function (data, param) {
 
     for (let k = 0; k < totaldeitens; k++) {
       if (campolink != "" && campolink != Object.keys(data[0])[k]) {
-        code += `<div class="maketablegridheadings" style="padding: 4px 8px 4px 8px; ${invertcolor} ${bordacell}">${troca(
-          Object.keys(data[0])[k]
+        code += `<div class="maketablegridheadings" style="padding: 4px 8px 4px 8px; ${invertcolor} ${bordacell}">${dtsttroca(
+          Object.keys(data[0])[k], param
         )}</div>
         
         `;
       } else {
-        code += `<div class="maketablegridheadings" style="padding: 4px 8px 4px 8px; ${invertcolor} ${bordacell}">${troca(
-          Object.keys(data[0])[k]
+        code += `<div class="maketablegridheadings" style="padding: 4px 8px 4px 8px; ${invertcolor} ${bordacell}">${dtsttroca(
+          Object.keys(data[0])[k], param
         )}</div>
         
         `;
