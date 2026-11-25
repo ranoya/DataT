@@ -869,7 +869,7 @@ const exportcsv = function(dados, separador = ',') {
  *
  */
 
-function exportjson(dados, indentacao = 2) {
+const exportjson = function(dados, indentacao = 2) {
   if (dados.length === 0) return '[]';
 
   // Array de arrays: a primeira linha vira as chaves dos objetos
