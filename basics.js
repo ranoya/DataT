@@ -813,6 +813,79 @@ const tags = function (arr, crit, separator) {
 };
 
 /**
+ * Export array to csv
+ * Create a string with csv format data from an array
+ *
+ * Ex:
+ *
+ * mycsv = exportcsv(array, separator);
+ *
+ * Use:
+ *
+ * mydata = exportcsv(myarray, ";");
+ * mydata = exportcsv(myarray) // uses "," as separator (the normal convention)
+ *
+ */
+
+const exportcsv = function(dados, separador = ',') {
+  // Escapa um valor conforme a convenção CSV (RFC 4180)
+  const escapar = (valor) => {
+    if (valor === null || valor === undefined) return '';
+    const texto = String(valor);
+    // Se contém separador, aspas ou quebra de linha, envolve em aspas
+    // e duplica as aspas internas
+    if (texto.includes(separador) || texto.includes('"') || /[\r\n]/.test(texto)) {
+      return `"${texto.replace(/"/g, '""')}"`;
+    }
+    return texto;
+  };
+
+  if (dados.length === 0) return '';
+
+  // Caso 1: array de objetos → usa as chaves como cabeçalho
+  if (typeof dados[0] === 'object' && !Array.isArray(dados[0])) {
+    const cabecalho = Object.keys(dados[0]);
+    const linhas = dados.map(obj =>
+      cabecalho.map(chave => escapar(obj[chave])).join(separador)
+    );
+    return [cabecalho.map(escapar).join(separador), ...linhas].join('\n');
+  }
+
+  // Caso 2: array de arrays → cada subarray vira uma linha
+  return dados.map(linha => linha.map(escapar).join(separador)).join('\n');
+}
+
+/**
+ * Export array to json
+ * Create a string with json format data from an array
+ *
+ * Ex:
+ *
+ * myjson = exportjson(array);
+ *
+ * Use:
+ *
+ * mydata = exportjson(myarray);
+ *
+ */
+
+function exportjson(dados, indentacao = 2) {
+  if (dados.length === 0) return '[]';
+
+  // Array de arrays: a primeira linha vira as chaves dos objetos
+  if (Array.isArray(dados[0])) {
+    const [cabecalho, ...linhas] = dados;
+    const objetos = linhas.map(linha =>
+      Object.fromEntries(cabecalho.map((chave, i) => [chave, linha[i] ?? null]))
+    );
+    return JSON.stringify(objetos, null, indentacao);
+  }
+
+  // Array de objetos (ou de valores simples): conversão direta
+  return JSON.stringify(dados, null, indentacao);
+}
+
+/**
  * Shuffle Function
  * Create a list of numbers without repetition, for
  * random ordering itens of a list
