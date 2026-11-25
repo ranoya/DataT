@@ -683,6 +683,56 @@ const sortbylist = function (arr, list, crit) {
 };
 
 /**
+ * Simplify the data from an array
+ * Create a copy of an array with a limited quantity of columns and data
+ *
+ * Ex:
+ *
+ * newarray = reducecolumns(oldarray, listofcolumns);
+ *
+ * Use:
+ *
+ * data = [
+ *               {'fruit': 'orange', 'quantity': 5, 'type': 'B'},
+ *               {'fruit': 'apple', 'quantity': 2, 'type': 'A'},
+ *               {'fruit': 'banana', 'quantity': 3, 'type': 'B'},
+ *               {'fruit': 'apple', 'quantity': 10, 'type':'B'},
+ *               {'fruit': 'strawberry', 'quantity': 5, 'type': 'A'}
+ *              ];
+ *
+ * columns = ['fruit', 'type'];
+ *
+ * simple = reducecolumns(data, columns); // Array(5):
+ *                                        // [
+ *                                        //  {'fruit': 'orange', 'type': 'B'},
+ *                                        //  {'fruit': 'apple', 'type': 'A'},
+ *                                        //  {'fruit': 'banana', 'type': 'B'},
+ *                                        //  {'fruit': 'apple', 'type':'B'},
+ *                                        //  {'fruit': 'strawberry', 'type': 'A'}
+ *                                        // ]
+ *
+ */
+
+const reducecolumns = function (arr, list) {
+  let newarr = [];
+
+  for (let a = 0; a < arr.length; a++) {
+    if (typeof newarr[a] != "Object") {
+      newarr[a] = {};
+    }
+    for (let k = 0; k < list.length; k++) {
+      if (typeof arr[a][list[k]] != "undefined" && arr[a][list[k]] != null) {
+        newarr[a][list[k]] = arr[a][list[k]];
+      } else {
+        newarr[a][list[k]] = "";
+      }
+    }
+  }
+
+  return newarr;
+}
+
+/**
  * Sort by alphabetic order
  * Sort an array in alphabetic order over the values for a specific key
  *
